@@ -75,5 +75,9 @@ function formatDate(dateStr) {
   return date.toLocaleString("sr-RS"); // Format: dd.mm.yyyy hh:mm:ss
 }
 
+document.getElementById("createUserBtn").addEventListener("click", () => {
+  window.open("/kreiraj-korisnika", "_blank"); // ili putanju koju koristiš
+});
+
 // Initial fetch
 fetchUsers(currentPage);

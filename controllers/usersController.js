@@ -64,6 +64,7 @@ export const addUser = async (req, res) => {
       phone,
       role,
       uniqueMasterCitizenNumber,
+      lastLogin: new Date(),
       healthInstitution: healthInstitution._id,
     });
 
@@ -84,7 +85,8 @@ export const getUsers = async (req, res) => {
     const users = await User.find()
       .skip(skip)
       .limit(limit)
-      .populate("healthInstitution"); // optional, if you want to include related data
+      .populate("healthInstitution")
+      .sort({ lastLogin: -1 });
 
     const total = await User.countDocuments();
 
