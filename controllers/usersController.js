@@ -74,6 +74,28 @@ export const addUser = async (req, res) => {
   }
 };
 
+// Get user by id
+export const getUser = async (req, res) => {
+  try {
+    // Retrieve the user ID from the URL parameters
+    const { id } = req.params;
+
+    // Find the user in the database using the provided ID
+    const user = await User.findById(id);
+
+    // If the user is not found, return an error
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    // Return the user's data
+    res.json(user);
+  } catch (error) {
+    // Return an error message if something goes wrong
+    res.status(500).json({ msg: error.message });
+  }
+};
+
 // Get all users with pagination
 export const getUsers = async (req, res) => {
   try {
@@ -104,6 +126,36 @@ export const getUsers = async (req, res) => {
 //Modify user
 export const modifyUser = async (req, res) => {
   try {
+    const userId = req.params.id;
+    const {
+      username,
+      firstName,
+      lastName,
+      mail,
+      phone,
+      role,
+      uniqueMasterCitizenNumber,
+    } = req.body;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        username,
+        firstName,
+        lastName,
+        mail,
+        phone,
+        role,
+        uniqueMasterCitizenNumber,
+      },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ msg: "Korisnik nije pronađen" });
+    }
+
+    res.status(200).json(updatedUser);
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }

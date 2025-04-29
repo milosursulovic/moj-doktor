@@ -30,7 +30,7 @@ function renderTable(users) {
       <td>✖</td>
       <td>${user.lastLogin ? formatDate(user.lastLogin) : "—"}</td>
       <td><button class="role-btn">Uloge</button></td>
-      <td><button class="edit-btn">Uredi</button></td>
+      <td><button class="edit-btn" data-id="${user._id}">Uredi</button></td>
       <td>✔</td>
     `;
 
@@ -76,8 +76,22 @@ function formatDate(dateStr) {
 }
 
 document.getElementById("createUserBtn").addEventListener("click", () => {
-  window.open("/kreiraj-korisnika", "_blank"); // ili putanju koju koristiš
+  window.open("/kreiraj-korisnika", "_blank");
 });
 
 // Initial fetch
 fetchUsers(currentPage);
+
+const editButtons = document.querySelectorAll(".edit-btn");
+
+editButtons.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const userId = btn.getAttribute("data-id");
+
+    if (userId) {
+      window.open(`/uredi-korisnika/?id=${userId}`, "_blank");
+    } else {
+      alert("ID korisnika nije pronađen.");
+    }
+  });
+});
