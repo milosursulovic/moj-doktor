@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <title>Креирај корисника</title>
+    <link rel="stylesheet" href="kreiraj-korisnika.css">
+</head>
+<body>
+    <div class="modal">
+        <div class="modal-header">
+            <h2>Креирај корисника</h2>
+            <button class="close-button">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Корисничко име: <span class="required">*</span></label>
+                        <input type="text" placeholder="Корисничко име">
+                    </div>
+                    <div class="form-group">
+                        <label>ЈМБГ:</label>
+                        <input type="text" placeholder="ЈМБГ">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Лозинка: <span class="required">*</span></label>
+                        <input type="password" placeholder="Лозинка">
+                    </div>
+                    <div class="form-group">
+                        <label>Е-маил: <span class="required">*</span></label>
+                        <input type="email" placeholder="Е-маил">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Име: <span class="required">*</span></label>
+                        <input type="text" placeholder="Име">
+                    </div>
+                    <div class="form-group">
+                        <label>Мобилни телефон: <span class="required">*</span></label>
+                        <input type="text" placeholder="Мобилни телефон">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Презиме: <span class="required">*</span></label>
+                        <input type="text" placeholder="Презиме">
+                    </div>
+                    <div class="form-group">
+                        <label>Улога:</label>
+                        <select>
+                            <option selected disabled>Улоге које корисник нема</option>
+                            <option value="admin">Администратор</option>
+                            <option value="doktor">Доктор</option>
+                            <option value="sestra">Медицинска сестра</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Унеси</button>
+                    <button type="button" class="btn btn-danger">Откажи</button>
+                </div>
+                <p class="note"><span class="required">*</span> Обавезна поља</p>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

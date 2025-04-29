@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <title>Korisnici</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="header">
+        <h2>Korisnici</h2>
+    </div>
+
+    <div class="filters">
+        <input type="text" placeholder="Ime/Prezime/Korisničko ime">
+        <select>
+            <option>Klinika - Opšta bolnica - Bor</option>
+        </select>
+        <button>Uloga</button>
+        <button class="download-btn">⬇ Skini izveštaj</button>
+    </div>
+
+    <div class="actions">
+        <button class="blue-btn">Kreiraj korisnika</button>
+        <button>Resetuj sortiranje</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Korisničko ime</th>
+                <th>Ime</th>
+                <th>Prezime</th>
+                <th>E-mail</th>
+                <th>Naziv zdravstvene ustanove</th>
+                <th>Promeni lozinku</th>
+                <th>Poslednja prijava-APP</th>
+                <th>Uloga</th>
+                <th>Uredi</th>
+                <th>Validni</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>sladan.dinulovic</td>
+                <td>Sladan</td>
+                <td>Dinulović</td>
+                <td>borbolnica@sezampro.rs</td>
+                <td>Zdravstveni centar Negotin, Opšta bolnica Bor</td>
+                <td>✖</td>
+                <td>26.08.2024 10:45:55</td>
+                <td><button class="role-btn">Uloge</button></td>
+                <td><button class="edit-btn">Uredi</button></td>
+                <td>✔</td>
+            </tr>
+            <!-- Dodaj još redova po potrebi -->
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        <button>&laquo;</button>
+        <button class="active">1</button>
+        <button>2</button>
+        <button>3</button>
+        <span>...</span>
+        <button>22</button>
+        <button>&raquo;</button>
+    </div>
+</body>
+</html>
