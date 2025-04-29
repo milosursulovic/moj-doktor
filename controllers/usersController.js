@@ -76,6 +76,24 @@ export const addUser = async (req, res) => {
 // Get all users with pagination
 export const getUsers = async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1; // default to page 1
+    const limit = parseInt(req.query.limit) || 10; // default to 10 users per page
+
+    const skip = (page - 1) * limit;
+
+    const users = await User.find()
+      .skip(skip)
+      .limit(limit)
+      .populate("healthInstitution"); // optional, if you want to include related data
+
+    const total = await User.countDocuments();
+
+    res.json({
+      users,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+      totalUsers: total,
+    });
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
