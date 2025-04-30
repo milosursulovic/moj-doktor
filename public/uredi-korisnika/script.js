@@ -32,17 +32,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.querySelector('input[type="text"][value="0668620058"]').value =
       userData.phone;
 
-    // For password changes
-    const passwordCheckbox = document.querySelector('input[type="checkbox"]');
-    passwordCheckbox.addEventListener("change", () => {
-      const passwordField = document.querySelector('input[type="password"]');
-      if (passwordCheckbox.checked) {
-        passwordField.disabled = false;
-      } else {
-        passwordField.disabled = true;
-      }
-    });
-
     // Handle form submission for user update
     const form = document.querySelector("form.modal-body");
     form.addEventListener("submit", async (e) => {
@@ -59,9 +48,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         ).value,
         phone: form.querySelector('input[type="text"][value="0668620058"]')
           .value,
-        password: passwordCheckbox.checked
-          ? form.querySelector('input[type="password"]').value
-          : undefined, // If password is changed
+        password: form.querySelector('input[type="password"]').value || undefined,
       };
 
       // If password is empty, do not send it
