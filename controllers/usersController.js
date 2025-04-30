@@ -160,3 +160,30 @@ export const modifyUser = async (req, res) => {
     res.status(500).json({ msg: error.message });
   }
 };
+
+//Change role
+export const changeRole = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const { role } = req.body;
+
+    if (!role) {
+      return res.status(400).json({ msg: "Nedostaje nova uloga." });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { role },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ msg: "Korisnik nije pronađen." });
+    }
+
+    res.status(200).json({ msg: "Uloga uspešno promenjena.", user: updatedUser });
+
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+};

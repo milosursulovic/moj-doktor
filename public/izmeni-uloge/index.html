@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="sr">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Uloge korisnika</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="header">
+    <h2>Izmena uloga</h2>
+  </div>
+
+  <div class="user-info">
+    <p><strong>Korisničko ime:</strong> <span id="username"></span></p>
+    <p><strong>Ime i prezime:</strong> <span id="fullName"></span></p>
+    <p><strong>E-mail:</strong> <span id="email"></span></p>
+  </div>
+
+  <form id="roleForm" class="role-form">
+    <h3>Dodeli uloge:</h3>
+
+    <div class="roles">
+      <label><input type="radio" name="role" value="admin"> Admin</label><br>
+      <label><input type="radio" name="role" value="doc"> Doktor</label><br>
+      <label><input type="radio" name="role" value="nurse"> Medicinska sestra</label><br>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn save">Sačuvaj</button>
+      <button type="button" class="btn cancel" onclick="window.close()">Otkaži</button>
+    </div>
+  </form>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

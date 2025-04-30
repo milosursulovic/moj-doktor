@@ -29,7 +29,7 @@ function renderTable(users) {
       <td>${user.healthInstitution?.name || "—"}</td>
       <td>✖</td>
       <td>${user.lastLogin ? formatDate(user.lastLogin) : "—"}</td>
-      <td><button class="role-btn">Uloge</button></td>
+      <td><button class="role-btn" data-id="${user._id}">Uloge</button></td>
       <td><button class="edit-btn" data-id="${user._id}">Uredi</button></td>
       <td>✔</td>
     `;
@@ -85,6 +85,18 @@ document.querySelector("table tbody").addEventListener("click", (e) => {
 
     if (userId) {
       window.open(`/uredi-korisnika/?id=${userId}`, "_blank");
+    } else {
+      alert("ID korisnika nije pronađen.");
+    }
+  }
+});
+
+document.querySelector("table tbody").addEventListener("click", (e) => {
+  if (e.target.classList.contains("role-btn")) {
+    const userId = e.target.getAttribute("data-id");
+
+    if (userId) {
+      window.open(`/izmeni-uloge/?id=${userId}`, "_blank");
     } else {
       alert("ID korisnika nije pronađen.");
     }
