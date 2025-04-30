@@ -1,5 +1,5 @@
 let currentPage = 1;
-const limit = 10; // or any number you want per page
+const limit = 10;
 
 async function fetchUsers(page = 1) {
   try {
@@ -79,19 +79,16 @@ document.getElementById("createUserBtn").addEventListener("click", () => {
   window.open("/kreiraj-korisnika", "_blank");
 });
 
-// Initial fetch
-fetchUsers(currentPage);
-
-const editButtons = document.querySelectorAll(".edit-btn");
-
-editButtons.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    const userId = btn.getAttribute("data-id");
+document.querySelector("table tbody").addEventListener("click", (e) => {
+  if (e.target.classList.contains("edit-btn")) {
+    const userId = e.target.getAttribute("data-id");
 
     if (userId) {
       window.open(`/uredi-korisnika/?id=${userId}`, "_blank");
     } else {
       alert("ID korisnika nije pronađen.");
     }
-  });
+  }
 });
+
+fetchUsers(currentPage);
