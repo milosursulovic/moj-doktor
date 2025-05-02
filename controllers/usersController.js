@@ -6,7 +6,6 @@ import HealthInstitution from "../models/HealthInstitution.js"; // Health Instit
 // Add a new user
 export const addUser = async (req, res) => {
   try {
-    // Destructure user data from the request body
     const {
       username,
       password,
@@ -35,21 +34,21 @@ export const addUser = async (req, res) => {
       $or: [{ username }, { mail }, { uniqueMasterCitizenNumber }],
     });
 
-    // Hash the user's password using bcrypt
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-    // If a user with the same credentials exists, respond with conflict
     if (existingUser) {
       return res
         .status(409)
         .json({ msg: "User with provided credentials already exists." });
     }
 
-    // Find or create a default Health Institution
+    // Hash password before saving
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    // Find or create default health institution
     let healthInstitution = await HealthInstitution.findOne({
       name: "Zdravstveni centar Negotin, Opšta bolnica Bor",
     });
+
     if (!healthInstitution) {
       healthInstitution = new HealthInstitution({
         name: "Zdravstveni centar Negotin, Opšta bolnica Bor",
@@ -57,7 +56,6 @@ export const addUser = async (req, res) => {
       await healthInstitution.save();
     }
 
-    // Create a new user instance with hashed password and default health institution
     const newUser = new User({
       username,
       password: hashedPassword,
@@ -71,10 +69,11 @@ export const addUser = async (req, res) => {
       healthInstitution: healthInstitution._id,
     });
 
-    // Save the new user to the database
     await newUser.save();
+
+    // Redirect to the user list after adding a new user
+    res.redirect("/users"); // This will reload the page and show the updated user list
   } catch (error) {
-    // Return a server error message if something fails
     res.status(500).json({ msg: error.message });
   }
 };
