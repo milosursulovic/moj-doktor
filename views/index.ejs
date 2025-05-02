@@ -114,7 +114,7 @@
   <!-- Conditionally render Logout button if user is logged in -->
   <% if (user) { %>
   <button class="logout-btn" onclick="window.location.href='/auth/logout';">
-    Logout
+    Odjavi se
   </button>
   <% } %>
 
@@ -137,17 +137,16 @@
       Kreiraj korisnika
     </button>
     <button>Resetuj sortiranje</button>
-    <select id="sortField">
-      <option value="">Sortiraj po...</option>
-      <option value="firstName">Ime</option>
-      <option value="lastName">Prezime</option>
-      <option value="username">Korisničko ime</option>
-      <option value="lastLogin">Poslednja prijava</option>
+    <select id="sortField" onchange="searchUsers()">
+      <option value="firstName" <%= sortBy === 'firstName' ? 'selected' : '' %>>Ime</option>
+      <option value="lastName" <%= sortBy === 'lastName' ? 'selected' : '' %>>Prezime</option>
+      <option value="username" <%= sortBy === 'username' ? 'selected' : '' %>>Korisničko ime</option>
+      <option value="lastLogin" <%= sortBy === 'lastLogin' ? 'selected' : '' %>>Poslednja prijava</option>
     </select>
 
-    <select id="sortOrder">
-      <option value="asc">Rastuće</option>
-      <option value="desc">Opadajuće</option>
+    <select id="sortOrder" onchange="searchUsers()">
+      <option value="asc" <%= sortOrder === 'asc' ? 'selected' : '' %>>Rastuće</option>
+      <option value="desc" <%= sortOrder === 'desc' ? 'selected' : '' %>>Opadajuće</option>
     </select>
   </div>
 
@@ -218,18 +217,28 @@
 
     function searchUsers() {
       const query = document.getElementById('searchInput').value.trim();
+      const sortBy = document.getElementById('sortField').value;
+      const sortOrder = document.getElementById('sortOrder').value;
 
-      // Update the URL based on whether the search input is empty or not
-      let newUrl = '/users/?page=1&limit=10'; // default URL with pagination and no query
+      // Start with URLSearchParams
+      const urlParams = new URLSearchParams(window.location.search);
 
+      // Reset to page 1 on new search
+      urlParams.set('page', currentPage);
+      urlParams.set('limit', 10);
+
+      // Set or remove the query parameter
       if (query) {
-        newUrl = `/users/?query=${encodeURIComponent(query)}&page=1&limit=10`;
+        urlParams.set('query', query);
       } else {
-        // If the search input is empty, remove the 'query' parameter from the URL
-        const urlParams = new URLSearchParams(window.location.search);
         urlParams.delete('query');
-        newUrl = `/users/?${urlParams.toString()}`;
       }
+
+      // Update sorting parameters
+      urlParams.set('sortBy', sortBy);
+      urlParams.set('sortOrder', sortOrder);
+
+      const newUrl = `/users/?${urlParams.toString()}`;
 
       // Update the browser history without reloading the page
       history.pushState({}, '', newUrl);
@@ -237,7 +246,7 @@
       // Optional: reset to page 1
       currentPage = 1;
 
-      fetch(`/users/search/?query=${query}&page=${currentPage}&limit=10`)
+      fetch(`/users/search/?query=${query}&page=${currentPage}&limit=10&sortBy=${sortBy}&sortOrder=${sortOrder}`)
         .then(response => response.json())
         .then(data => {
           const users = data.users;
@@ -303,9 +312,11 @@
 
     function goToPage(page) {
       const searchQuery = document.getElementById('searchInput')?.value?.trim();
+      const sortBy = document.getElementById('sortField').value;
+      const sortOrder = document.getElementById('sortOrder').value;
 
       // Start building the URL
-      let url = `/users/?page=${page}&limit=10`;
+      let url = `/users/?page=${page}&limit=10&sortBy=${sortBy}&sortOrder=${sortOrder}`;
 
       // Add the search query to the URL only if it's not empty
       if (searchQuery) {

@@ -107,57 +107,73 @@ export const getUser = async (req, res) => {
 // Renders EJS view with paginated and filtered user data
 export const getUsers = async (req, res) => {
   try {
-    // Parse pagination parameters from query string, with defaults
+    // Extract 'page' and 'limit' from query parameters, with defaults
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
 
-    // Retrieve user data based on search query, page, and limit
+    // Extract sorting criteria from query parameters, with defaults
+    const sortBy = req.query.sortBy || "lastLogin";
+    const sortOrder = req.query.sortOrder || "desc";
+
+    // Call the service to get paginated, filtered, and sorted user data
     const { users, total, totalPages, searchQuery } = await getUserData(
-      req.query.query,
-      page,
-      limit
+      req.query.query, // Search query string (e.g., keyword typed by user)
+      page, // Current page number
+      limit, // Number of items per page
+      sortBy, // Field to sort by (e.g., firstName, lastLogin, etc.)
+      sortOrder // Sort order ('asc' or 'desc')
     );
 
-    // Render the "index" EJS template with the retrieved data
+    // Render the EJS template 'index.ejs' with all relevant user and pagination data
     res.render("index", {
-      user: req.user, // Authenticated user (if any)
-      users, // List of users for current page
-      currentPage: page, // Current page number
+      user: req.user, // Authenticated user info (if available)
+      users, // The current page of users
+      currentPage: page, // The current page number
       totalPages, // Total number of pages
-      totalUsers: total, // Total number of matched users
-      searchQuery, // The search term used (if any)
+      totalUsers: total, // Total number of users matching the search
+      searchQuery, // Original search query (to re-fill the search box)
+      sortBy: req.query.sortBy || "", // Current sorting field (used to keep dropdown selected)
+      sortOrder: req.query.sortOrder || "asc", // Current sorting order (to keep dropdown selected)
     });
   } catch (error) {
-    // Handle unexpected errors
+    // Handle errors (e.g., DB failure) by returning a 500 Internal Server Error
     res.status(500).json({ msg: error.message });
   }
 };
 
-// Returns user data as JSON (for frontend AJAX calls)
+// Returns user data as JSON (e.g., for frontend AJAX usage)
 export const getUsersSearch = async (req, res) => {
   try {
-    // Parse pagination parameters from query string, with defaults
+    // Extract pagination values
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
 
-    // Retrieve user data based on search query, page, and limit
+    // Extract sorting values
+    const sortBy = req.query.sortBy || "lastLogin";
+    const sortOrder = req.query.sortOrder || "desc";
+
+    // Get user data using the same logic as in getUsers
     const { users, total, totalPages, searchQuery } = await getUserData(
       req.query.query,
       page,
-      limit
+      limit,
+      sortBy,
+      sortOrder
     );
 
-    // Respond with user data in JSON format
+    // Send user and pagination data back as JSON (suitable for frontend JS)
     res.json({
-      user: req.user, // Authenticated user (if any)
-      users, // List of users for current page
+      user: req.user, // Authenticated user info
+      users, // Page of users
       currentPage: page, // Current page number
-      totalPages, // Total number of pages
-      totalUsers: total, // Total number of matched users
-      searchQuery, // The search term used (if any)
+      totalPages, // Total pages available
+      totalUsers: total, // Total matching users
+      searchQuery, // Original search keyword
+      sortBy: req.query.sortBy || "", // Current sort field
+      sortOrder: req.query.sortOrder || "asc", // Current sort direction
     });
   } catch (error) {
-    // Handle unexpected errors
+    // On error, return a 500 status and error message in JSON
     res.status(500).json({ msg: error.message });
   }
 };

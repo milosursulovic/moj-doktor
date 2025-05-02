@@ -1,15 +1,16 @@
 // Import the User model from the models directory
-import User from "../models/User.js"; // adjust path if needed
+import User from "../models/User.js"; // Adjust the path if necessary
 
-// Fetches paginated and optionally filtered user data
-export const getUserData = async (query, page, limit) => {
-  // Calculate how many users to skip based on the current page
+// Fetches paginated, filtered, and sorted user data
+export const getUserData = async (query, page, limit, sortBy, sortOrder) => {
+  // Calculate how many documents to skip based on the current page
   const skip = (page - 1) * limit;
 
-  // Default to empty string if no search query is provided
+  // Use an empty string if no search query is provided
   const searchQuery = query || "";
 
-  // Build a MongoDB search condition with case-insensitive partial matching
+  // Build a search condition using regex for case-insensitive partial matching
+  // This will search for the keyword in username, firstName, lastName, or mail fields
   const searchCondition = {
     $or: [
       { username: { $regex: searchQuery, $options: "i" } },
@@ -19,22 +20,26 @@ export const getUserData = async (query, page, limit) => {
     ],
   };
 
-  // Fetch users and total count in parallel
-  const [users, total] = await Promise.all([
-    // Query users matching the search condition
-    User.find(searchCondition)
-      .skip(skip) // Skip users for pagination
-      .limit(limit) // Limit the number of users returned
-      .populate("healthInstitution") // Populate the healthInstitution field with referenced data
-      .sort({ lastLogin: -1 }), // Sort users by last login date in descending order
+  // Dynamically build the sort object
+  // Example: { firstName: 1 } for ascending or { lastLogin: -1 } for descending
+  const sort = {};
+  if (sortBy) {
+    sort[sortBy] = sortOrder === "asc" ? 1 : -1;
+  }
 
-    // Count total users matching the search condition
-    User.countDocuments(searchCondition),
+  // Perform the user query and count in parallel for efficiency
+  const [users, total] = await Promise.all([
+    User.find(searchCondition) // Apply search condition
+      .skip(skip) // Skip users for pagination
+      .limit(limit) // Limit results to the current page
+      .populate("healthInstitution") // Populate healthInstitution reference
+      .sort(sort), // Apply sorting dynamically
+    User.countDocuments(searchCondition), // Count matching documents
   ]);
 
-  // Calculate total number of pages
+  // Calculate total number of pages based on result count and limit
   const totalPages = Math.ceil(total / limit);
 
-  // Return user data and pagination info
+  // Return the fetched user list along with pagination metadata
   return { users, total, totalPages, searchQuery };
 };
