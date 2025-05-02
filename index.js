@@ -5,6 +5,12 @@ import cors from "cors"; // Middleware for enabling Cross-Origin Resource Sharin
 import bodyParser from "body-parser"; // Middleware for parsing incoming JSON requests
 import usersRoutes from "./routes/usersRoutes.js"; // Import custom user route handlers
 import dotenv from "dotenv"; // Loads environment variables from a .env file
+import bcrypt from "bcrypt"; // Library for hashing passwords
+import User from "./models/User.js"; // Import User model
+import passport from "passport"; // Middleware for authentication
+import { Strategy as LocalStrategy } from "passport-local"; // Local authentication strategy
+import session from "express-session"; // Middleware for managing sessions
+import { isLoggedIn } from "./middlewares/auth.js"; // Middleware for checking if user is logged in
 
 // Load environment variables from .env file
 dotenv.config();
@@ -25,16 +31,70 @@ app.use(cors());
 // Automatically parse JSON bodies from incoming requests
 app.use(bodyParser.json());
 
-// Serve static files from the "public" folder (e.g. frontend assets)
-app.use(express.static("public"));
+// Automatically parse URL-encoded bodies from incoming requests
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Set up session and passport middleware
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "default_secret", // Secret for signing the session ID cookie
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session()); // This is what allows passport to persist sessions
+
+// Configure LocalStrategy
+passport.use(
+  new LocalStrategy(async (username, password, done) => {
+    try {
+      const user = await User.findOne({ username });
+      if (!user) return done(null, false, { message: "Incorrect username" });
+
+      const match = await bcrypt.compare(password, user.password);
+      if (!match) return done(null, false, { message: "Incorrect password" });
+
+      return done(null, user);
+    } catch (err) {
+      console.error("Error during authentication:", err);
+      return done(err);
+    }
+  })
+);
+
+// Serialize user
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+// Deserialize user
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await User.findById(id);
+    done(null, user);
+  } catch (err) {
+    console.error("Error deserializing user:", err);
+    done(err);
+  }
+});
 
 // Render login page
-app.get("/login", (req, res) => {
+app.get("/login", isLoggedIn, (req, res) => {
   // Render the login page
   res.render("login");
 });
 
-// Mount the user routes under the /api/users path
+app.post(
+  "/login",
+  passport.authenticate("local", {
+    successRedirect: "/users",
+    failureRedirect: "/login",
+  })
+);
+
+// Mount the user routes under the /users path
 app.use("/users", usersRoutes);
 
 // Connect to MongoDB using the connection string from the .env file

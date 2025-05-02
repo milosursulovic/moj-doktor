@@ -9,9 +9,12 @@ import {
   modifyUser, // Function to update a user's information
   changeRole, // Function to update a user's role
 } from "../controllers/usersController.js";
+import { isAuthenticated } from "../middlewares/auth.js"; // Middleware to check if user is authenticated
 
 // Create a new router instance
 const router = express.Router();
+
+router.use(isAuthenticated); // Apply authentication middleware to all routes
 
 // Define route for rendering the add user form (GET /users/add-user)
 router.get("/add-user", (req, res) => {

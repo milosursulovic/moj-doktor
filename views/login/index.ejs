@@ -94,9 +94,14 @@
       <h1>IZIS</h1>
       <h2>Integrisani Zdravstveni<br />Informacioni Sistem Republike Srbije</h2>
 
-      <form>
-        <input type="text" placeholder="Korisničko ime" required />
-        <input type="password" placeholder="Loznika" required />
+      <form method="POST" action="/login">
+        <input
+          type="text"
+          name="username"
+          placeholder="Korisničko ime"
+          required
+        />
+        <input type="password" name="password" placeholder="Lozinka" required />
         <button type="submit">Prijava</button>
       </form>
 
