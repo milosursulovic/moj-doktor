@@ -140,7 +140,7 @@
           <td><%= user.username %></td>
           <td><%= user.firstName %></td>
           <td><%= user.lastName %></td>
-          <td><%= user.email %></td>
+          <td><%= user.mail %></td>
           <td><%= user.healthInstitution.name %></td>
           <td>✖</td>
           <td><%= new Date(user.lastLogin).toLocaleString() %></td>
@@ -163,6 +163,16 @@
         <% }); %>
       </tbody>
     </table>
+
+    <div class="pagination">
+      <button>&laquo;</button>
+      <button class="active">1</button>
+      <button>2</button>
+      <button>3</button>
+      <span>...</span>
+      <button>22</button>
+      <button>&raquo;</button>
+    </div>
 
     <script>
       function editUser(userId) {

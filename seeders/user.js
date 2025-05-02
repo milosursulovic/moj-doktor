@@ -28,6 +28,7 @@ mongoose
       role: "admin",
       uniqueMasterCitizenNumber: "1234567890123",
       healthInstitution: institution._id,
+      lastLogin: new Date(),
     });
 
     await user.save();
