@@ -1,221 +1,297 @@
 <!DOCTYPE html>
 <html lang="sr">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Korisnici</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
-        background-color: #f4f4f4;
-      }
 
-      .header {
-        margin-bottom: 15px;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <title>Korisnici</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f4f4f4;
+    }
 
-      .filters,
-      .actions {
-        margin-bottom: 10px;
-      }
+    .header {
+      margin-bottom: 15px;
+    }
 
-      input[type="text"],
-      select {
-        padding: 5px;
-        margin-right: 10px;
-      }
+    .filters,
+    .actions {
+      margin-bottom: 10px;
+    }
 
-      button {
-        padding: 6px 12px;
-        cursor: pointer;
-      }
+    input[type="text"],
+    select {
+      padding: 5px;
+      margin-right: 10px;
+    }
 
-      .download-btn {
-        background-color: lightgray;
-      }
+    button {
+      padding: 6px 12px;
+      cursor: pointer;
+    }
 
-      .blue-btn {
-        background-color: #4da6ff;
-        color: white;
-        border: none;
-      }
+    .download-btn {
+      background-color: lightgray;
+    }
 
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        background-color: white;
-      }
+    .blue-btn {
+      background-color: #4da6ff;
+      color: white;
+      border: none;
+    }
 
-      table th,
-      table td {
-        padding: 10px;
-        border: 1px solid #ccc;
-        text-align: left;
-      }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+    }
 
-      table th {
-        background-color: #e6e6e6;
-      }
+    table th,
+    table td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
 
-      .role-btn {
-        background-color: #33b5e5;
-        color: white;
-        border: none;
-        padding: 5px 10px;
-      }
+    table th {
+      background-color: #e6e6e6;
+    }
 
-      .edit-btn {
-        background-color: #007acc;
-        color: white;
-        border: none;
-        padding: 5px 10px;
-      }
+    .role-btn {
+      background-color: #33b5e5;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+    }
 
-      .pagination {
-        margin-top: 15px;
-        text-align: center;
-      }
+    .edit-btn {
+      background-color: #007acc;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+    }
 
-      .pagination button {
-        padding: 5px 10px;
-        margin: 2px;
-        border: 1px solid #ccc;
-        background-color: white;
-      }
+    .pagination {
+      margin-top: 15px;
+      text-align: center;
+    }
 
-      .pagination button.active {
-        background-color: #007acc;
-        color: white;
-        border: none;
-      }
+    .pagination button {
+      padding: 5px 10px;
+      margin: 2px;
+      border: 1px solid #ccc;
+      background-color: white;
+    }
 
-      /* Add this for the fixed logout button positioned at top right */
-      .logout-btn {
-        position: fixed;
-        top: 10px;
-        right: 10px;
-        padding: 8px 16px;
-        background-color: #ff5733;
-        color: white;
-        border: none;
-        cursor: pointer;
-        z-index: 1000; /* Ensure it's always on top */
-      }
+    .pagination button.active {
+      background-color: #007acc;
+      color: white;
+      border: none;
+    }
 
-      .logout-btn:hover {
-        background-color: #ff2e00;
-      }
-    </style>
-  </head>
-  <body>
-    <!-- Conditionally render Logout button if user is logged in -->
-    <% if (user) { %>
-      <button class="logout-btn" onclick="window.location.href='/auth/logout';">
-        Logout
-      </button>
+    /* Add this for the fixed logout button positioned at top right */
+    .logout-btn {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      padding: 8px 16px;
+      background-color: #ff5733;
+      color: white;
+      border: none;
+      cursor: pointer;
+      z-index: 1000;
+      /* Ensure it's always on top */
+    }
+
+    .logout-btn:hover {
+      background-color: #ff2e00;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Conditionally render Logout button if user is logged in -->
+  <% if (user) { %>
+  <button class="logout-btn" onclick="window.location.href='/auth/logout';">
+    Logout
+  </button>
+  <% } %>
+
+  <div class="header">
+    <h2>Korisnici</h2>
+  </div>
+
+  <div class="filters">
+    <input type="text" id="searchInput" placeholder="Ime/Prezime/Korisničko ime" oninput="searchUsers()" />
+
+    <select>
+      <option>Klinika - Opšta bolnica - Bor</option>
+    </select>
+    <button>Uloga</button>
+    <button class="download-btn">⬇ Skini izveštaj</button>
+  </div>
+
+  <div class="actions">
+    <button id="createUserBtn" class="blue-btn" onclick="window.location.href='/users/add-user'">
+      Kreiraj korisnika
+    </button>
+    <button>Resetuj sortiranje</button>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Korisničko ime</th>
+        <th>Ime</th>
+        <th>Prezime</th>
+        <th>E-mail</th>
+        <th>Naziv zdravstvene ustanove</th>
+        <th>Promeni lozinku</th>
+        <th>Poslednja prijava-APP</th>
+        <th>Uloga</th>
+        <th>Uredi</th>
+        <th>Validni</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% users.forEach((user, index) => { %>
+      <tr>
+        <td>
+          <%= index + 1 + (currentPage - 1) * totalUsers / totalPages %>
+        </td>
+        <td><%= user.username %></td>
+        <td><%= user.firstName %></td>
+        <td><%= user.lastName %></td>
+        <td><%= user.mail %></td>
+        <td><%= user.healthInstitution.name %></td>
+        <td>✖</td>
+        <td><%= new Date(user.lastLogin).toLocaleString() %></td>
+        <td>
+          <button class="role-btn" onclick="manageRoles('<%= user._id %>')">
+            Uloge
+          </button>
+        </td>
+        <td>
+          <button class="edit-btn" onclick="editUser('<%= user._id %>')">
+            Uredi
+          </button>
+        </td>
+        <td>✔</td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table>
+
+  <div class="pagination">
+    <button <%= currentPage === 1 ? 'disabled' : '' %> onclick="goToPage(<%= currentPage - 1 %>)">&laquo;</button>
+
+    <% for (let i = 1; i <= totalPages; i++) { %>
+    <button class="<%= i === currentPage ? 'active' : '' %>" onclick="goToPage(<%= i %>)"><%= i %></button>
     <% } %>
 
-    <div class="header">
-      <h2>Korisnici</h2>
-    </div>
+    <button <%= currentPage === totalPages ? 'disabled' : '' %> onclick="goToPage(<%= currentPage + 1 %>)">&raquo;</button>
+  </div>
 
-    <div class="filters">
-      <input type="text" placeholder="Ime/Prezime/Korisničko ime" />
-      <select>
-        <option>Klinika - Opšta bolnica - Bor</option>
-      </select>
-      <button>Uloga</button>
-      <button class="download-btn">⬇ Skini izveštaj</button>
-    </div>
+  <script>
+    let currentPage = <%= currentPage %>;
 
-    <div class="actions">
-      <button
-        id="createUserBtn"
-        class="blue-btn"
-        onclick="window.location.href='/users/add-user'"
-      >
-        Kreiraj korisnika
-      </button>
-      <button>Resetuj sortiranje</button>
-    </div>
+    const urlParams = new URLSearchParams(window.location.search);
+    const query = urlParams.get('query');
 
-    <table>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Korisničko ime</th>
-          <th>Ime</th>
-          <th>Prezime</th>
-          <th>E-mail</th>
-          <th>Naziv zdravstvene ustanove</th>
-          <th>Promeni lozinku</th>
-          <th>Poslednja prijava-APP</th>
-          <th>Uloga</th>
-          <th>Uredi</th>
-          <th>Validni</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% users.forEach((user, index) => { %>
-        <tr>
-          <td>
-            <%= index + 1 + (currentPage - 1) * totalUsers / totalPages %>
-          </td>
-          <td><%= user.username %></td>
-          <td><%= user.firstName %></td>
-          <td><%= user.lastName %></td>
-          <td><%= user.mail %></td>
-          <td><%= user.healthInstitution.name %></td>
-          <td>✖</td>
-          <td><%= new Date(user.lastLogin).toLocaleString() %></td>
-          <td>
-            <button class="role-btn" onclick="manageRoles('<%= user._id %>')">
-              Uloge
-            </button>
-          </td>
-          <td>
-            <button
-              class="edit-btn"
-              data-id="<%= user._id %>"
-              onclick="editUser('<%= user._id %>')"
-            >
-              Uredi
-            </button>
-          </td>
-          <td>✔</td>
-        </tr>
-        <% }); %>
-      </tbody>
-    </table>
+    if (query) {
+      document.getElementById('searchInput').value = query;
+    }
 
-    <div class="pagination">
-      <button 
-        <%= currentPage === 1 ? 'disabled' : '' %> 
-        onclick="goToPage(<%= currentPage - 1 %>)">&laquo;</button>
-      
-      <% for (let i = 1; i <= totalPages; i++) { %>
-        <button 
-          class="<%= i === currentPage ? 'active' : '' %>" 
-          onclick="goToPage(<%= i %>)"><%= i %></button>
-      <% } %>
-      
-      <button 
-        <%= currentPage === totalPages ? 'disabled' : '' %> 
-        onclick="goToPage(<%= currentPage + 1 %>)">&raquo;</button>
-    </div>
+    function searchUsers() {
+      const query = document.getElementById('searchInput').value.trim();
 
-    <script>
-      function goToPage(page) {
-        window.location.href = `/users?page=${page}&limit=10`;
+      // Update the URL to reflect current query and page = 1
+      const newUrl = `/users/?query=${encodeURIComponent(query)}&page=1&limit=10`;
+      history.pushState({}, '', newUrl); // this updates URL without reloading the page
+
+      // Optional: reset to page 1
+      currentPage = 1;
+
+      fetch(`/users/search/?query=${query}&page=${currentPage}&limit=10`)
+        .then(response => response.json())
+        .then(data => {
+          const users = data.users;
+          const totalPages = data.totalPages;
+
+          renderUsers(users);
+          updatePagination(totalPages);
+        })
+        .catch(error => console.error('Error fetching search results:', error));
+    }
+
+
+    function renderUsers(users) {
+
+      const tbody = document.querySelector('table tbody');
+      tbody.innerHTML = ''; // Clear the existing rows
+
+      users.forEach((user, index) => {
+        const row = document.createElement('tr');
+
+        row.innerHTML = `
+            <td>${index + 1 + (currentPage - 1) * 10}</td>
+            <td>${user.username}</td>
+            <td>${user.firstName}</td>
+            <td>${user.lastName}</td>
+            <td>${user.mail}</td>
+            <td>${user.healthInstitution.name}</td>
+            <td>✖</td>
+            <td>${new Date(user.lastLogin).toLocaleString()}</td>
+            <td><button class="role-btn" onclick="manageRoles('${user._id}')">Uloge</button></td>
+            <td><button class="edit-btn" onclick="editUser('${user._id}')">Uredi</button></td>
+            <td>✔</td>
+          `;
+
+        tbody.appendChild(row);
+      });
+    }
+
+    function updatePagination(totalPages) {
+      const pagination = document.querySelector('.pagination');
+      pagination.innerHTML = ''; // Clear current pagination buttons
+
+      const prevButton = document.createElement('button');
+      prevButton.innerHTML = '&laquo;';
+      prevButton.disabled = currentPage === 1;
+      prevButton.onclick = () => goToPage(currentPage - 1);
+      pagination.appendChild(prevButton);
+
+      for (let i = 1; i <= totalPages; i++) {
+        const pageButton = document.createElement('button');
+        pageButton.innerHTML = i;
+        pageButton.classList.toggle('active', i === currentPage);
+        pageButton.onclick = () => goToPage(i);
+        pagination.appendChild(pageButton);
       }
 
-      function editUser(userId) {
-        window.location.href = `/users/edit-user/${userId}`;
-      }
+      const nextButton = document.createElement('button');
+      nextButton.innerHTML = '&raquo;';
+      nextButton.disabled = currentPage === totalPages;
+      nextButton.onclick = () => goToPage(currentPage + 1);
+      pagination.appendChild(nextButton);
+    }
 
-      function manageRoles(userId) {
-        window.location.href = `/users/manage-roles/${userId}`;
-      }
-    </script>
-  </body>
+    function goToPage(page) {
+      const searchQuery = document.getElementById('searchInput')?.value?.trim();
+
+      window.location.href = `/users/?query=${searchQuery}&page=${page}&limit=10`;
+    }
+
+    function editUser(userId) {
+      window.location.href = `/users/edit-user/${userId}`;
+    }
+
+    function manageRoles(userId) {
+      window.location.href = `/users/manage-roles/${userId}`;
+    }
+  </script>
+</body>
+
 </html>

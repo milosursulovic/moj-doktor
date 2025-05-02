@@ -7,6 +7,7 @@ import {
   getAddUser, // Renders the form to add a new user
   addUser, // Handles creation of a new user (POST)
   getUsers, // Fetches all users, with pagination support
+  getUsersSearch, // Fetches users based on search query
   getUser, // Fetches a single user by their ID
   getEditUser, // Renders the form to edit a specific user's data
   editUser, // Handles updating user data (PATCH)
@@ -32,6 +33,9 @@ router.post("/", addUser);
 
 // Route to retrieve a paginated list of all users (GET /users)
 router.get("/", getUsers);
+
+// Route to retrieve a paginated list of all users for user search query (GET /users/search)
+router.get("/search", getUsersSearch);
 
 // Route to retrieve details of a specific user by ID (GET /users/:id)
 router.get("/:id", getUser);

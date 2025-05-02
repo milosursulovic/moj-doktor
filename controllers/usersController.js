@@ -110,13 +110,26 @@ export const getUsers = async (req, res) => {
     const limit = parseInt(req.query.limit) || 10; // Default to 10 users per page
     const skip = (page - 1) * limit; // Calculate number of users to skip
 
-    const users = await User.find()
+    const searchQuery = req.query.query || ""; // Get search query from request
+
+    // Build search condition
+    const searchCondition = {
+      $or: [
+        { username: { $regex: searchQuery, $options: "i" } },
+        { firstName: { $regex: searchQuery, $options: "i" } },
+        { lastName: { $regex: searchQuery, $options: "i" } },
+        { mail: { $regex: searchQuery, $options: "i" } },
+      ],
+    };
+
+    // Fetch users based on search query and pagination
+    const users = await User.find(searchCondition)
       .skip(skip)
       .limit(limit)
       .populate("healthInstitution") // Load related health institution
       .sort({ lastLogin: -1 }); // Sort by last login date descending
 
-    const total = await User.countDocuments(); // Count total users
+    const total = await User.countDocuments(searchCondition); // Count total users matching search
     const totalPages = Math.ceil(total / limit); // Calculate number of pages
 
     // Render the user list template
@@ -126,6 +139,50 @@ export const getUsers = async (req, res) => {
       currentPage: page,
       totalPages,
       totalUsers: total,
+      searchQuery, // Pass the search query to the view
+    });
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+};
+
+// Fetch and render all users with pagination and search support
+export const getUsersSearch = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1; // Default to page 1
+    const limit = parseInt(req.query.limit) || 10; // Default to 10 users per page
+    const skip = (page - 1) * limit; // Calculate number of users to skip
+
+    const searchQuery = req.query.query || ""; // Get search query from request
+
+    // Build search condition
+    const searchCondition = {
+      $or: [
+        { username: { $regex: searchQuery, $options: "i" } },
+        { firstName: { $regex: searchQuery, $options: "i" } },
+        { lastName: { $regex: searchQuery, $options: "i" } },
+        { mail: { $regex: searchQuery, $options: "i" } },
+      ],
+    };
+
+    // Fetch users based on search query and pagination
+    const users = await User.find(searchCondition)
+      .skip(skip)
+      .limit(limit)
+      .populate("healthInstitution") // Load related health institution
+      .sort({ lastLogin: -1 }); // Sort by last login date descending
+
+    const total = await User.countDocuments(searchCondition); // Count total users matching search
+    const totalPages = Math.ceil(total / limit); // Calculate number of pages
+
+    // Render the user list template
+    res.json({
+      user: req.user,
+      users,
+      currentPage: page,
+      totalPages,
+      totalUsers: total,
+      searchQuery, // Pass the search query to the view
     });
   } catch (error) {
     res.status(500).json({ msg: error.message });
