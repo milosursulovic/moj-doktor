@@ -1,164 +1,161 @@
 <!DOCTYPE html>
 <html lang="sr">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Uloge korisnika</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
-        background-color: #f4f4f4;
-      }
 
-      .header {
-        margin-bottom: 20px;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <title>Uloge korisnika</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f4f4f4;
+    }
 
-      .user-info,
-      .role-form {
-        background-color: white;
-        border: 1px solid #ccc;
-        padding: 20px;
-        margin-bottom: 20px;
-        border-radius: 8px;
-      }
+    .header {
+      margin-bottom: 20px;
+    }
 
-      .user-info p {
-        margin: 5px 0;
-      }
+    .user-info,
+    .role-form {
+      background-color: white;
+      border: 1px solid #ccc;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+    }
 
-      .role-form h3 {
-        margin-bottom: 15px;
-      }
+    .user-info p {
+      margin: 5px 0;
+    }
 
-      .roles {
-        margin-bottom: 15px;
-      }
+    .role-form h3 {
+      margin-bottom: 15px;
+    }
 
-      .roles label {
-        display: inline-block;
-        margin-right: 20px;
-        font-weight: normal;
-        font-size: 16px;
-      }
+    .roles {
+      margin-bottom: 15px;
+    }
 
-      .roles input[type="radio"] {
-        margin-right: 8px;
-        vertical-align: middle;
-      }
+    .roles label {
+      display: inline-block;
+      margin-right: 20px;
+      font-weight: normal;
+      font-size: 16px;
+    }
 
-      .form-actions {
-        margin-top: 20px;
-      }
+    .roles input[type="radio"] {
+      margin-right: 8px;
+      vertical-align: middle;
+    }
 
-      button {
-        padding: 8px 14px;
-        cursor: pointer;
-        border: none;
-        font-weight: bold;
-        border-radius: 4px;
-        transition: background-color 0.3s ease;
-      }
+    .form-actions {
+      margin-top: 20px;
+    }
 
-      .btn-save {
-        background-color: #4caf50;
-        color: white;
-      }
+    button {
+      padding: 8px 14px;
+      cursor: pointer;
+      border: none;
+      font-weight: bold;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
 
-      .btn-save:hover {
-        background-color: #45a049;
-      }
+    .btn-save {
+      background-color: #4caf50;
+      color: white;
+    }
 
-      .btn-cancel {
-        background-color: #f44336;
-        color: white;
-      }
+    .btn-save:hover {
+      background-color: #45a049;
+    }
 
-      .btn-cancel:hover {
-        background-color: #e53935;
-      }
-    </style>
-  </head>
+    .btn-cancel {
+      background-color: #f44336;
+      color: white;
+    }
 
-  <body>
-    <div class="header">
-      <h2>Izmena uloga</h2>
+    .btn-cancel:hover {
+      background-color: #e53935;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <h2>Izmena uloga</h2>
+  </div>
+
+  <div class="user-info">
+    <p><strong>Korisničko ime:</strong> <span><%= user.username %></span></p>
+    <p>
+      <strong>Ime i prezime:</strong>
+      <span><%= user.firstName %> <%= user.lastName %></span>
+    </p>
+    <p><strong>E-mail:</strong> <span><%= user.mail %></span></p>
+  </div>
+
+  <form id="roleForm" class="role-form">
+    <h3>Dodeli uloge:</h3>
+
+    <div class="roles">
+      <label>
+        <input type="radio" name="role" value="admin" <% if (user.role ===
+          'admin') { %> checked <% } %> /> Admin </label><br />
+      <label>
+        <input type="radio" name="role" value="doc" <% if (user.role ===
+          'doc') { %> checked <% } %> /> Doktor </label><br />
+      <label>
+        <input type="radio" name="role" value="nurse" <% if (user.role ===
+          'nurse') { %> checked <% } %> /> Medicinska sestra </label><br />
     </div>
 
-    <div class="user-info">
-      <p><strong>Korisničko ime:</strong> <span><%= user.username %></span></p>
-      <p>
-        <strong>Ime i prezime:</strong>
-        <span><%= user.firstName %> <%= user.lastName %></span>
-      </p>
-      <p><strong>E-mail:</strong> <span><%= user.mail %></span></p>
+    <div class="form-actions">
+      <button type="submit" class="btn-save">Sačuvaj</button>
+      <button type="button" class="btn-cancel" onclick="window.history.back()">
+        Otkaži
+      </button>
     </div>
+  </form>
 
-    <form id="roleForm" class="role-form">
-      <h3>Dodeli uloge:</h3>
+  <script>
+    document
+      .getElementById("roleForm")
+      .addEventListener("submit", async function(e) {
+        e.preventDefault();
+        const selectedRole = document.querySelector(
+          'input[name="role"]:checked'
+        )?.value;
 
-      <div class="roles">
-        <label>
-          <input type="radio" name="role" value="admin" <% if (user.role ===
-          'admin') { %> checked <% } %> /> Admin </label
-        ><br />
-        <label>
-          <input type="radio" name="role" value="doc" <% if (user.role ===
-          'doc') { %> checked <% } %> /> Doktor </label
-        ><br />
-        <label>
-          <input type="radio" name="role" value="nurse" <% if (user.role ===
-          'nurse') { %> checked <% } %> /> Medicinska sestra </label
-        ><br />
-      </div>
+        if (!selectedRole) {
+          alert("Morate izabrati ulogu.");
+          return;
+        }
 
-      <div class="form-actions">
-        <button type="submit" class="btn-save">Sačuvaj</button>
-        <button
-          type="button"
-          class="btn-cancel"
-          onclick="window.history.back()"
-        >
-          Otkaži
-        </button>
-      </div>
-    </form>
+        try {
+          const res = await fetch(`/users/<%= user._id %>/role`, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              role: selectedRole
+            }),
+          });
 
-    <script>
-      document
-        .getElementById("roleForm")
-        .addEventListener("submit", async function (e) {
-          e.preventDefault();
-          const selectedRole = document.querySelector(
-            'input[name="role"]:checked'
-          )?.value;
+          const data = await res.json();
 
-          if (!selectedRole) {
-            alert("Morate izabrati ulogu.");
-            return;
+          if (res.ok) {
+            alert("Uloga uspešno promenjena.");
+            window.location.href = "/users";
+          } else {
+            alert("Greška: " + data.msg);
           }
+        } catch (err) {
+          alert("Došlo je do greške prilikom slanja zahteva.");
+        }
+      });
+  </script>
+</body>
 
-          try {
-            const res = await fetch(`/users/<%= user._id %>/role`, {
-              method: "PATCH",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ role: selectedRole }),
-            });
-
-            const data = await res.json();
-
-            if (res.ok) {
-              alert("Uloga uspešno promenjena.");
-              window.location.href = "/users";
-            } else {
-              alert("Greška: " + data.msg);
-            }
-          } catch (err) {
-            alert("Došlo je do greške prilikom slanja zahteva.");
-          }
-        });
-    </script>
-  </body>
 </html>

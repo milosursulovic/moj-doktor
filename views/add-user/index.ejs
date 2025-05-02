@@ -1,187 +1,162 @@
 <!DOCTYPE html>
 <html lang="sr">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Kreiraj Korisnika</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #f0f0f0;
-      }
 
-      .modal {
-        background-color: white;
-        width: 800px;
-        margin: 50px auto;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        padding: 20px;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <title>Kreiraj Korisnika</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+    }
 
-      .modal-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
+    .modal {
+      background-color: white;
+      width: 800px;
+      margin: 50px auto;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      padding: 20px;
+    }
 
-      .close-button {
-        background: none;
-        border: none;
-        font-size: 24px;
-        cursor: pointer;
-      }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-      .form-row {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 15px;
-      }
+    .close-button {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+    }
 
-      .form-group {
-        flex: 0 0 48%;
-        display: flex;
-        flex-direction: column;
-      }
+    .form-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
 
-      .form-group label {
-        margin-bottom: 5px;
-        font-weight: bold;
-      }
+    .form-group {
+      flex: 0 0 48%;
+      display: flex;
+      flex-direction: column;
+    }
 
-      .form-group input,
-      .form-group select {
-        padding: 8px;
-        font-size: 14px;
-        border: 1px solid #aaa;
-        border-radius: 3px;
-      }
+    .form-group label {
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
 
-      .modal-footer {
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-        margin-top: 15px;
-      }
+    .form-group input,
+    .form-group select {
+      padding: 8px;
+      font-size: 14px;
+      border: 1px solid #aaa;
+      border-radius: 3px;
+    }
 
-      .btn {
-        padding: 8px 16px;
-        border: none;
-        border-radius: 3px;
-        color: white;
-        font-weight: bold;
-        cursor: pointer;
-      }
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 15px;
+    }
 
-      .btn-primary {
-        background-color: #2196f3;
-      }
+    .btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 3px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
 
-      .btn-danger {
-        background-color: #f44336;
-      }
+    .btn-primary {
+      background-color: #2196f3;
+    }
 
-      .required {
-        color: red;
-      }
+    .btn-danger {
+      background-color: #f44336;
+    }
 
-      .note {
-        font-size: 12px;
-        color: #666;
-        margin-top: 10px;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="modal">
-      <div class="modal-header">
-        <h2>Kreiraj Korisnika</h2>
-        <button class="close-button">&times;</button>
-      </div>
-      <div class="modal-body">
-        <form method="POST" action="/users">
-          <div class="form-row">
-            <div class="form-group">
-              <label>Korisničko Ime: <span class="required">*</span></label>
-              <input
-                type="text"
-                name="username"
-                placeholder="Korisničko Ime"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label>JMBG:</label>
-              <input
-                type="text"
-                name="uniqueMasterCitizenNumber"
-                placeholder="JMBG"
-              />
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label>Lozinka: <span class="required">*</span></label>
-              <input
-                type="password"
-                name="password"
-                placeholder="Lozinka"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label>E-mail: <span class="required">*</span></label>
-              <input type="email" name="mail" placeholder="E-mail" required />
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label>Ime: <span class="required">*</span></label>
-              <input type="text" name="firstName" placeholder="Ime" required />
-            </div>
-            <div class="form-group">
-              <label>Mobilni telefon: <span class="required">*</span></label>
-              <input
-                type="text"
-                name="phone"
-                placeholder="Mobilni telefon"
-                required
-              />
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label>Prezime: <span class="required">*</span></label>
-              <input
-                type="text"
-                name="lastName"
-                placeholder="Prezime"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label>Uloga:</label>
-              <select name="role">
-                <option selected disabled>Uloge koje korisnik nema</option>
-                <option value="admin">Administrator</option>
-                <option value="doc">Doktor</option>
-                <option value="nurse">Medicinska sestra</option>
-              </select>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Unesi</button>
-            <button
-              type="button"
-              class="btn btn-danger"
-              onclick="window.location.href='/users';"
-            >
-              Otkaži
-            </button>
-          </div>
-          <p class="note"><span class="required">*</span> Obavezna polja</p>
-        </form>
-      </div>
+    .required {
+      color: red;
+    }
+
+    .note {
+      font-size: 12px;
+      color: #666;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Kreiraj Korisnika</h2>
+      <button class="close-button">&times;</button>
     </div>
-  </body>
+    <div class="modal-body">
+      <form method="POST" action="/users">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Korisničko Ime: <span class="required">*</span></label>
+            <input type="text" name="username" placeholder="Korisničko Ime" required />
+          </div>
+          <div class="form-group">
+            <label>JMBG:</label>
+            <input type="text" name="uniqueMasterCitizenNumber" placeholder="JMBG" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Lozinka: <span class="required">*</span></label>
+            <input type="password" name="password" placeholder="Lozinka" required />
+          </div>
+          <div class="form-group">
+            <label>E-mail: <span class="required">*</span></label>
+            <input type="email" name="mail" placeholder="E-mail" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Ime: <span class="required">*</span></label>
+            <input type="text" name="firstName" placeholder="Ime" required />
+          </div>
+          <div class="form-group">
+            <label>Mobilni telefon: <span class="required">*</span></label>
+            <input type="text" name="phone" placeholder="Mobilni telefon" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Prezime: <span class="required">*</span></label>
+            <input type="text" name="lastName" placeholder="Prezime" required />
+          </div>
+          <div class="form-group">
+            <label>Uloga:</label>
+            <select name="role">
+              <option selected disabled>Uloge koje korisnik nema</option>
+              <option value="admin">Administrator</option>
+              <option value="doc">Doktor</option>
+              <option value="nurse">Medicinska sestra</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Unesi</button>
+          <button type="button" class="btn btn-danger" onclick="window.location.href='/users';">
+            Otkaži
+          </button>
+        </div>
+        <p class="note"><span class="required">*</span> Obavezna polja</p>
+      </form>
+    </div>
+  </div>
+</body>
+
 </html>

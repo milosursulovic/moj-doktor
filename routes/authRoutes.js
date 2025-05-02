@@ -18,7 +18,7 @@ const router = express.Router();
 router.get("/login", isLoggedIn, getLogin);
 
 // Handle login form submission using handleLogin from the controller
-router.post("/login", handleLogin);
+router.post("/login", isLoggedIn, handleLogin);
 
 // Logout route, invalidates the session
 router.get("/logout", logout);

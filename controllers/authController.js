@@ -1,4 +1,4 @@
-import passport from "passport";
+import passport from "passport"; // Import the passport library for authentication
 
 // Handle GET request to show the login page
 export const getLogin = (req, res) => {
