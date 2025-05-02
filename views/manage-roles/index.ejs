@@ -86,31 +86,79 @@
     </div>
 
     <div class="user-info">
-      <p><strong>Korisničko ime:</strong> <span id="username"></span></p>
-      <p><strong>Ime i prezime:</strong> <span id="fullName"></span></p>
-      <p><strong>E-mail:</strong> <span id="email"></span></p>
+      <p><strong>Korisničko ime:</strong> <span><%= user.username %></span></p>
+      <p>
+        <strong>Ime i prezime:</strong>
+        <span><%= user.firstName %> <%= user.lastName %></span>
+      </p>
+      <p><strong>E-mail:</strong> <span><%= user.mail %></span></p>
     </div>
 
     <form id="roleForm" class="role-form">
       <h3>Dodeli uloge:</h3>
 
       <div class="roles">
-        <label><input type="radio" name="role" value="admin" /> Admin</label
+        <label>
+          <input type="radio" name="role" value="admin" <% if (user.role ===
+          'admin') { %> checked <% } %> /> Admin </label
         ><br />
-        <label><input type="radio" name="role" value="doc" /> Doktor</label
+        <label>
+          <input type="radio" name="role" value="doc" <% if (user.role ===
+          'doc') { %> checked <% } %> /> Doktor </label
         ><br />
-        <label
-          ><input type="radio" name="role" value="nurse" /> Medicinska
-          sestra</label
+        <label>
+          <input type="radio" name="role" value="nurse" <% if (user.role ===
+          'nurse') { %> checked <% } %> /> Medicinska sestra </label
         ><br />
       </div>
 
       <div class="form-actions">
-        <button type="submit" class="btn save">Sačuvaj</button>
-        <button type="button" class="btn cancel" onclick="window.close()">
+        <button type="submit" class="btn-save">Sačuvaj</button>
+        <button
+          type="button"
+          class="btn-cancel"
+          onclick="window.history.back()"
+        >
           Otkaži
         </button>
       </div>
     </form>
+
+    <script>
+      document
+        .getElementById("roleForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const selectedRole = document.querySelector(
+            'input[name="role"]:checked'
+          )?.value;
+
+          if (!selectedRole) {
+            alert("Morate izabrati ulogu.");
+            return;
+          }
+
+          try {
+            const res = await fetch(`/users/<%= user._id %>/role`, {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ role: selectedRole }),
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+              alert("Uloga uspešno promenjena.");
+              window.location.href = "/users";
+            } else {
+              alert("Greška: " + data.msg);
+            }
+          } catch (err) {
+            alert("Došlo je do greške prilikom slanja zahteva.");
+          }
+        });
+    </script>
   </body>
 </html>

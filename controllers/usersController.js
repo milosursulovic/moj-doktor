@@ -3,6 +3,10 @@ import bcrypt from "bcrypt"; // For password hashing
 import User from "../models/User.js"; // User model
 import HealthInstitution from "../models/HealthInstitution.js"; // Health Institution model
 
+export const getAddUser = (req, res) => {
+  res.render("add-user");
+};
+
 // Add a new user
 export const addUser = async (req, res) => {
   try {
@@ -141,8 +145,18 @@ export const getUsers = async (req, res) => {
   }
 };
 
+export const getEditUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findById(userId);
+    res.render("edit-user", { user });
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+};
+
 // This function handles modifying user data based on the provided user ID and request body.
-export const modifyUser = async (req, res) => {
+export const editUser = async (req, res) => {
   try {
     const userId = req.params.id;
 
@@ -187,8 +201,28 @@ export const modifyUser = async (req, res) => {
   }
 };
 
+export const getManageRoles = async (req, res) => {
+  try {
+    // Get user ID from request params
+    const userId = req.params.id;
+
+    // Find the user by ID
+    const user = await User.findById(userId);
+
+    // If user not found, return 404
+    if (!user) {
+      return res.status(404).json({ msg: "Korisnik nije pronađen." });
+    }
+
+    // Render the manage role page with the user's data
+    res.render("manage-roles", { user });
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+};
+
 // Change a user's role
-export const changeRole = async (req, res) => {
+export const manageRoles = async (req, res) => {
   try {
     // Get user ID from request params
     const userId = req.params.id;
