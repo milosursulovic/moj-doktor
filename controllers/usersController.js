@@ -2,6 +2,7 @@
 import bcrypt from "bcrypt"; // For hashing user passwords
 import User from "../models/User.js"; // User model from database schema
 import HealthInstitution from "../models/HealthInstitution.js"; // Health institution model
+import { getUserData } from "../services/userService.js"; // Service for user data retrieval
 
 // Render the form to add a new user
 export const getAddUser = (req, res) => {
@@ -103,88 +104,60 @@ export const getUser = async (req, res) => {
   }
 };
 
-// Fetch and render all users with pagination support
+// Renders EJS view with paginated and filtered user data
 export const getUsers = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1; // Default to page 1
-    const limit = parseInt(req.query.limit) || 10; // Default to 10 users per page
-    const skip = (page - 1) * limit; // Calculate number of users to skip
+    // Parse pagination parameters from query string, with defaults
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
 
-    const searchQuery = req.query.query || ""; // Get search query from request
+    // Retrieve user data based on search query, page, and limit
+    const { users, total, totalPages, searchQuery } = await getUserData(
+      req.query.query,
+      page,
+      limit
+    );
 
-    // Build search condition
-    const searchCondition = {
-      $or: [
-        { username: { $regex: searchQuery, $options: "i" } },
-        { firstName: { $regex: searchQuery, $options: "i" } },
-        { lastName: { $regex: searchQuery, $options: "i" } },
-        { mail: { $regex: searchQuery, $options: "i" } },
-      ],
-    };
-
-    // Fetch users based on search query and pagination
-    const users = await User.find(searchCondition)
-      .skip(skip)
-      .limit(limit)
-      .populate("healthInstitution") // Load related health institution
-      .sort({ lastLogin: -1 }); // Sort by last login date descending
-
-    const total = await User.countDocuments(searchCondition); // Count total users matching search
-    const totalPages = Math.ceil(total / limit); // Calculate number of pages
-
-    // Render the user list template
+    // Render the "index" EJS template with the retrieved data
     res.render("index", {
-      user: req.user,
-      users,
-      currentPage: page,
-      totalPages,
-      totalUsers: total,
-      searchQuery, // Pass the search query to the view
+      user: req.user, // Authenticated user (if any)
+      users, // List of users for current page
+      currentPage: page, // Current page number
+      totalPages, // Total number of pages
+      totalUsers: total, // Total number of matched users
+      searchQuery, // The search term used (if any)
     });
   } catch (error) {
+    // Handle unexpected errors
     res.status(500).json({ msg: error.message });
   }
 };
 
-// Fetch and render all users with pagination and search support
+// Returns user data as JSON (for frontend AJAX calls)
 export const getUsersSearch = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1; // Default to page 1
-    const limit = parseInt(req.query.limit) || 10; // Default to 10 users per page
-    const skip = (page - 1) * limit; // Calculate number of users to skip
+    // Parse pagination parameters from query string, with defaults
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
 
-    const searchQuery = req.query.query || ""; // Get search query from request
+    // Retrieve user data based on search query, page, and limit
+    const { users, total, totalPages, searchQuery } = await getUserData(
+      req.query.query,
+      page,
+      limit
+    );
 
-    // Build search condition
-    const searchCondition = {
-      $or: [
-        { username: { $regex: searchQuery, $options: "i" } },
-        { firstName: { $regex: searchQuery, $options: "i" } },
-        { lastName: { $regex: searchQuery, $options: "i" } },
-        { mail: { $regex: searchQuery, $options: "i" } },
-      ],
-    };
-
-    // Fetch users based on search query and pagination
-    const users = await User.find(searchCondition)
-      .skip(skip)
-      .limit(limit)
-      .populate("healthInstitution") // Load related health institution
-      .sort({ lastLogin: -1 }); // Sort by last login date descending
-
-    const total = await User.countDocuments(searchCondition); // Count total users matching search
-    const totalPages = Math.ceil(total / limit); // Calculate number of pages
-
-    // Render the user list template
+    // Respond with user data in JSON format
     res.json({
-      user: req.user,
-      users,
-      currentPage: page,
-      totalPages,
-      totalUsers: total,
-      searchQuery, // Pass the search query to the view
+      user: req.user, // Authenticated user (if any)
+      users, // List of users for current page
+      currentPage: page, // Current page number
+      totalPages, // Total number of pages
+      totalUsers: total, // Total number of matched users
+      searchQuery, // The search term used (if any)
     });
   } catch (error) {
+    // Handle unexpected errors
     res.status(500).json({ msg: error.message });
   }
 };
