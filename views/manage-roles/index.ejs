@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="sr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Uloge korisnika</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f4f4f4;
+      }
+
+      .header {
+        margin-bottom: 20px;
+      }
+
+      .user-info,
+      .role-form {
+        background-color: white;
+        border: 1px solid #ccc;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+      }
+
+      .user-info p {
+        margin: 5px 0;
+      }
+
+      .role-form h3 {
+        margin-bottom: 15px;
+      }
+
+      .roles {
+        margin-bottom: 15px;
+      }
+
+      .roles label {
+        display: inline-block;
+        margin-right: 20px;
+        font-weight: normal;
+        font-size: 16px;
+      }
+
+      .roles input[type="radio"] {
+        margin-right: 8px;
+        vertical-align: middle;
+      }
+
+      .form-actions {
+        margin-top: 20px;
+      }
+
+      button {
+        padding: 8px 14px;
+        cursor: pointer;
+        border: none;
+        font-weight: bold;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+      }
+
+      .btn-save {
+        background-color: #4caf50;
+        color: white;
+      }
+
+      .btn-save:hover {
+        background-color: #45a049;
+      }
+
+      .btn-cancel {
+        background-color: #f44336;
+        color: white;
+      }
+
+      .btn-cancel:hover {
+        background-color: #e53935;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="header">
+      <h2>Izmena uloga</h2>
+    </div>
+
+    <div class="user-info">
+      <p><strong>Korisničko ime:</strong> <span id="username"></span></p>
+      <p><strong>Ime i prezime:</strong> <span id="fullName"></span></p>
+      <p><strong>E-mail:</strong> <span id="email"></span></p>
+    </div>
+
+    <form id="roleForm" class="role-form">
+      <h3>Dodeli uloge:</h3>
+
+      <div class="roles">
+        <label><input type="radio" name="role" value="admin" /> Admin</label
+        ><br />
+        <label><input type="radio" name="role" value="doc" /> Doktor</label
+        ><br />
+        <label
+          ><input type="radio" name="role" value="nurse" /> Medicinska
+          sestra</label
+        ><br />
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn save">Sačuvaj</button>
+        <button type="button" class="btn cancel" onclick="window.close()">
+          Otkaži
+        </button>
+      </div>
+    </form>
+  </body>
+</html>

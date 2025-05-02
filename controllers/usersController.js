@@ -122,7 +122,7 @@ export const getUsers = async (req, res) => {
     const total = await User.countDocuments();
 
     // Return paginated result
-    res.json({
+    res.render("index", {
       users,
       currentPage: page,
       totalPages: Math.ceil(total / limit),
@@ -204,8 +204,9 @@ export const changeRole = async (req, res) => {
     }
 
     // Return success message with updated user
-    res.status(200).json({ msg: "Uloga uspešno promenjena.", user: updatedUser });
-
+    res
+      .status(200)
+      .json({ msg: "Uloga uspešno promenjena.", user: updatedUser });
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }

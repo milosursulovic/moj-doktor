@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="sr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IZIS - Prijava</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Segoe UI", sans-serif;
+        background: linear-gradient(to bottom right, #0f1c2f, #1c2d44);
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .login-container {
+        background-color: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 30px;
+        width: 350px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        text-align: center;
+        color: white;
+      }
+
+      .login-container h1 {
+        margin-bottom: 10px;
+        font-size: 28px;
+      }
+
+      .login-container h2 {
+        font-size: 16px;
+        margin-bottom: 25px;
+        line-height: 1.4;
+      }
+
+      .login-container form {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .login-container input {
+        padding: 12px;
+        border: none;
+        border-radius: 6px;
+        font-size: 15px;
+        outline: none;
+        background-color: #f2f2f2;
+        color: #333;
+        margin-bottom: 15px;
+        width: 100%;
+      }
+
+      .login-container button {
+        padding: 12px;
+        background: linear-gradient(to bottom, #63a4ff, #3d7bd6);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        width: 100%;
+      }
+
+      .login-container input::placeholder {
+        color: #999;
+      }
+
+      .login-container button:hover {
+        background: linear-gradient(to bottom, #468dd8, #5fa8f5);
+      }
+
+      .forgot-password {
+        display: block;
+        margin-top: 15px;
+        color: #b8c4dd;
+        font-size: 14px;
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-container">
+      <h1>IZIS</h1>
+      <h2>Integrisani Zdravstveni<br />Informacioni Sistem Republike Srbije</h2>
+
+      <form>
+        <input type="text" placeholder="Korisničko ime" required />
+        <input type="password" placeholder="Loznika" required />
+        <button type="submit">Prijava</button>
+      </form>
+
+      <a href="#" class="forgot-password">Zaboravljena lozinka?</a>
+    </div>
+  </body>
+</html>

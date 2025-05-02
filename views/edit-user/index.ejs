@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="sr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Uredi</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        background-color: #f2f2f2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+
+      .modal {
+        background: white;
+        border: 1px solid #ccc;
+        width: 400px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        border-radius: 5px;
+      }
+
+      .modal-header h2 {
+        margin: 0 0 10px 0;
+        font-size: 18px;
+        text-align: center;
+      }
+
+      .modal-body {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .modal-body label {
+        margin-top: 10px;
+        font-weight: bold;
+      }
+
+      .modal-body input[type="text"],
+      .modal-body input[type="email"],
+      .modal-body input[type="password"] {
+        padding: 6px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .modal-body input:disabled {
+        background-color: #eee;
+        color: #555;
+      }
+
+      .modal-body input[type="checkbox"] {
+        margin-top: 5px;
+        transform: scale(1.2);
+      }
+
+      .modal-footer {
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .btn {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 3px;
+        font-size: 14px;
+        cursor: pointer;
+      }
+
+      .btn.save {
+        background-color: #5bc0de;
+        color: white;
+      }
+
+      .btn.cancel {
+        background-color: #d9534f;
+        color: white;
+      }
+
+      .required {
+        color: red;
+      }
+
+      .note {
+        font-size: 12px;
+        margin-top: 10px;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Uredi</h2>
+      </div>
+      <form class="modal-body">
+        <label>Korisničko ime: <span class="required">*</span></label>
+        <input type="text" value="sladan.dinulovic" disabled />
+
+        <label>Nova lozinka:</label>
+        <input type="password" placeholder="Lozinka" />
+
+        <label>Ime: <span class="required">*</span></label>
+        <input type="text" value="Slađan" />
+
+        <label>Prezime: <span class="required">*</span></label>
+        <input type="text" value="Dinulović" />
+
+        <label>E-mail: <span class="required">*</span></label>
+        <input type="email" value="borbolnica@sezampro.rs" />
+
+        <label>Mobilni telefon: <span class="required">*</span></label>
+        <input type="text" value="0668620058" />
+
+        <div class="modal-footer">
+          <button type="submit" class="btn save">Sačuvaj</button>
+          <button type="button" class="btn cancel" onclick="window.close()">
+            Otkaži
+          </button>
+        </div>
+      </form>
+      <p class="note"><span class="required">*</span> Obavezna polja</p>
+    </div>
+  </body>
+</html>

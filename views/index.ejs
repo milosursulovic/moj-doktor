@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="sr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Korisnici</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f4f4f4;
+      }
+
+      .header {
+        margin-bottom: 15px;
+      }
+
+      .filters,
+      .actions {
+        margin-bottom: 10px;
+      }
+
+      input[type="text"],
+      select {
+        padding: 5px;
+        margin-right: 10px;
+      }
+
+      button {
+        padding: 6px 12px;
+        cursor: pointer;
+      }
+
+      .download-btn {
+        background-color: lightgray;
+      }
+
+      .blue-btn {
+        background-color: #4da6ff;
+        color: white;
+        border: none;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: white;
+      }
+
+      table th,
+      table td {
+        padding: 10px;
+        border: 1px solid #ccc;
+        text-align: left;
+      }
+
+      table th {
+        background-color: #e6e6e6;
+      }
+
+      .role-btn {
+        background-color: #33b5e5;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+      }
+
+      .edit-btn {
+        background-color: #007acc;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+      }
+
+      .pagination {
+        margin-top: 15px;
+        text-align: center;
+      }
+
+      .pagination button {
+        padding: 5px 10px;
+        margin: 2px;
+        border: 1px solid #ccc;
+        background-color: white;
+      }
+
+      .pagination button.active {
+        background-color: #007acc;
+        color: white;
+        border: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h2>Korisnici</h2>
+    </div>
+
+    <div class="filters">
+      <input type="text" placeholder="Ime/Prezime/Korisničko ime" />
+      <select>
+        <option>Klinika - Opšta bolnica - Bor</option>
+      </select>
+      <button>Uloga</button>
+      <button class="download-btn">⬇ Skini izveštaj</button>
+    </div>
+
+    <div class="actions">
+      <button
+        id="createUserBtn"
+        class="blue-btn"
+        onclick="window.location.href='/users/add-user'"
+      >
+        Kreiraj korisnika
+      </button>
+      <button>Resetuj sortiranje</button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Korisničko ime</th>
+          <th>Ime</th>
+          <th>Prezime</th>
+          <th>E-mail</th>
+          <th>Naziv zdravstvene ustanove</th>
+          <th>Promeni lozinku</th>
+          <th>Poslednja prijava-APP</th>
+          <th>Uloga</th>
+          <th>Uredi</th>
+          <th>Validni</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% users.forEach((user, index) => { %>
+        <tr>
+          <td>
+            <%= index + 1 + (currentPage - 1) * totalUsers / totalPages %>
+          </td>
+          <td><%= user.username %></td>
+          <td><%= user.firstName %></td>
+          <td><%= user.lastName %></td>
+          <td><%= user.email %></td>
+          <td><%= user.healthInstitution.name %></td>
+          <td>✖</td>
+          <td><%= new Date(user.lastLogin).toLocaleString() %></td>
+          <td>
+            <button class="role-btn" onclick="manageRoles('<%= user._id %>')">
+              Uloge
+            </button>
+          </td>
+          <td>
+            <button
+              class="edit-btn"
+              data-id="<%= user._id %>"
+              onclick="editUser('<%= user._id %>')"
+            >
+              Uredi
+            </button>
+          </td>
+          <td>✔</td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+
+    <script>
+      function editUser(userId) {
+        window.location.href = `/users/edit-user/${userId}`;
+      }
+
+      function manageRoles(userId) {
+        window.location.href = `/users/manage-roles/${userId}`;
+      }
+    </script>
+  </body>
+</html>
