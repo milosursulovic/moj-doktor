@@ -1,15 +1,17 @@
 // Import necessary modules
-import bcrypt from "bcrypt"; // For password hashing
-import User from "../models/User.js"; // User model
-import HealthInstitution from "../models/HealthInstitution.js"; // Health Institution model
+import bcrypt from "bcrypt"; // For hashing user passwords
+import User from "../models/User.js"; // User model from database schema
+import HealthInstitution from "../models/HealthInstitution.js"; // Health institution model
 
+// Render the form to add a new user
 export const getAddUser = (req, res) => {
-  res.render("add-user");
+  res.render("add-user"); // Renders the 'add-user' EJS template
 };
 
-// Add a new user
+// Handle logic for adding a new user
 export const addUser = async (req, res) => {
   try {
+    // Destructure fields from the request body
     const {
       username,
       password,
@@ -21,7 +23,7 @@ export const addUser = async (req, res) => {
       uniqueMasterCitizenNumber,
     } = req.body;
 
-    // Validate required fields
+    // Validate that all required fields are provided
     if (
       !username ||
       !password ||
@@ -33,7 +35,7 @@ export const addUser = async (req, res) => {
       return res.status(400).json({ msg: "Missing required fields." });
     }
 
-    // Check for existing user with same username, email, or ID number
+    // Check if user with same username, email, or ID number already exists
     const existingUser = await User.findOne({
       $or: [{ username }, { mail }, { uniqueMasterCitizenNumber }],
     });
@@ -44,15 +46,16 @@ export const addUser = async (req, res) => {
         .json({ msg: "User with provided credentials already exists." });
     }
 
-    // Hash password before saving
+    // Hash the password before saving the user
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    // Find or create default health institution
+    // Try to find the default health institution
     let healthInstitution = await HealthInstitution.findOne({
       name: "Zdravstveni centar Negotin, Opšta bolnica Bor",
     });
 
+    // If not found, create and save it
     if (!healthInstitution) {
       healthInstitution = new HealthInstitution({
         name: "Zdravstveni centar Negotin, Opšta bolnica Bor",
@@ -60,6 +63,7 @@ export const addUser = async (req, res) => {
       await healthInstitution.save();
     }
 
+    // Create a new user object
     const newUser = new User({
       username,
       password: hashedPassword,
@@ -73,89 +77,73 @@ export const addUser = async (req, res) => {
       healthInstitution: healthInstitution._id,
     });
 
+    // Save the new user to the database
     await newUser.save();
 
-    // Redirect to the user list after adding a new user
-    res.redirect("/users"); // This will reload the page and show the updated user list
+    // Redirect to user list page
+    res.redirect("/users");
   } catch (error) {
-    res.status(500).json({ msg: error.message });
+    res.status(500).json({ msg: error.message }); // Handle server errors
   }
 };
 
-// Get user by ID
+// Fetch a specific user by ID
 export const getUser = async (req, res) => {
   try {
-    // Get user ID from the request parameters
-    const { id } = req.params;
+    const { id } = req.params; // Extract user ID from URL
+    const user = await User.findById(id); // Find user by ID
 
-    // Find the user by ID
-    const user = await User.findById(id);
-
-    // If not found, return 404 error
     if (!user) {
-      return res.status(404).json({ msg: "User not found" });
+      return res.status(404).json({ msg: "User not found" }); // Return 404 if not found
     }
 
-    // Return user data
-    res.json(user);
+    res.json(user); // Return user data as JSON
   } catch (error) {
-    // Return server error message
-    res.status(500).json({ msg: error.message });
+    res.status(500).json({ msg: error.message }); // Handle server errors
   }
 };
 
-// This function handles fetching and rendering the users with pagination support.
+// Fetch and render all users with pagination support
 export const getUsers = async (req, res) => {
   try {
-    // Get the current page number from the query parameters, defaulting to page 1 if not provided
-    const page = parseInt(req.query.page) || 1;
+    const page = parseInt(req.query.page) || 1; // Default to page 1
+    const limit = parseInt(req.query.limit) || 10; // Default to 10 users per page
+    const skip = (page - 1) * limit; // Calculate number of users to skip
 
-    // Get the number of users to show per page (limit) from the query parameters, defaulting to 10 if not provided
-    const limit = parseInt(req.query.limit) || 10;
-
-    // Calculate how many users to skip based on the current page and limit
-    const skip = (page - 1) * limit;
-
-    // Find users from the database with pagination: skip the necessary number of users, limit the result to the specified number,
-    // and populate the health institution associated with each user. Sort by last login date (descending).
     const users = await User.find()
       .skip(skip)
       .limit(limit)
-      .populate("healthInstitution")
-      .sort({ lastLogin: -1 });
+      .populate("healthInstitution") // Load related health institution
+      .sort({ lastLogin: -1 }); // Sort by last login date descending
 
-    // Get the total number of users in the database to calculate total pages for pagination
-    const total = await User.countDocuments();
+    const total = await User.countDocuments(); // Count total users
+    const totalPages = Math.ceil(total / limit); // Calculate number of pages
 
-    // Calculate the total number of pages based on the total users and the number of users per page (limit)
-    const totalPages = Math.ceil(total / limit);
-
-    // Render the "index" view with users data, current page, total pages, and total users information,
-    // and include the logged-in user from req.user
+    // Render the user list template
     res.render("index", {
-      user: req.user, // Pass the logged-in user to the template
+      user: req.user,
       users,
       currentPage: page,
       totalPages,
       totalUsers: total,
     });
   } catch (error) {
-    // If an error occurs, respond with a 500 status code and the error message
     res.status(500).json({ msg: error.message });
   }
 };
 
+// Render the edit user form with current user data
 export const getEditUser = async (req, res) => {
   try {
     const userId = req.params.id;
     const user = await User.findById(userId);
-    res.render("edit-user", { user });
+    res.render("edit-user", { user }); // Pass user data to the form
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
 };
 
-// This function handles modifying user data based on the provided user ID and request body.
+// Handle editing of user data
 export const editUser = async (req, res) => {
   try {
     const userId = req.params.id;
@@ -171,6 +159,7 @@ export const editUser = async (req, res) => {
       password,
     } = req.body;
 
+    // Prepare the update object
     const updateData = {
       username,
       firstName,
@@ -181,76 +170,68 @@ export const editUser = async (req, res) => {
       uniqueMasterCitizenNumber,
     };
 
-    // Ako je poslata nova lozinka i nije prazna
+    // If a new password is provided, hash and update it
     if (password && password.trim() !== "") {
       const hashedPassword = await bcrypt.hash(password, 10);
       updateData.password = hashedPassword;
     }
 
+    // Update the user by ID
     const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
-      new: true,
+      new: true, // Return the updated document
     });
 
     if (!updatedUser) {
-      return res.status(404).json({ msg: "Korisnik nije pronađen" });
+      return res.status(404).json({ msg: "Korisnik nije pronađen" }); // Not found
     }
 
-    res.status(200).json(updatedUser);
+    res.status(200).json(updatedUser); // Return updated user
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
 };
 
+// Render the page for managing user roles
 export const getManageRoles = async (req, res) => {
   try {
-    // Get user ID from request params
     const userId = req.params.id;
-
-    // Find the user by ID
     const user = await User.findById(userId);
 
-    // If user not found, return 404
     if (!user) {
       return res.status(404).json({ msg: "Korisnik nije pronađen." });
     }
 
-    // Render the manage role page with the user's data
-    res.render("manage-roles", { user });
+    res.render("manage-roles", { user }); // Render role management view
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
 };
 
-// Change a user's role
+// Handle updating a user's role
 export const manageRoles = async (req, res) => {
   try {
-    // Get user ID from request params
     const userId = req.params.id;
-
-    // Get new role from request body
     const { role } = req.body;
 
-    // Validate role input
+    // Validate new role
     if (!role) {
       return res.status(400).json({ msg: "Nedostaje nova uloga." });
     }
 
-    // Update user's role
+    // Update user's role in the DB
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { role },
       { new: true }
     );
 
-    // If user not found, return 404
     if (!updatedUser) {
       return res.status(404).json({ msg: "Korisnik nije pronađen." });
     }
 
-    // Return success message with updated user
     res
       .status(200)
-      .json({ msg: "Uloga uspešno promenjena.", user: updatedUser });
+      .json({ msg: "Uloga uspešno promenjena.", user: updatedUser }); // Success message
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }

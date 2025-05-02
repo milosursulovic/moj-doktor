@@ -1,17 +1,23 @@
 // Authentication middleware
+
+// Middleware to check if the user is authenticated (logged in)
 export const isAuthenticated = (req, res, next) => {
+  // If user is authenticated (typically checked via session or Passport.js helper)
   if (req.isAuthenticated()) {
-    // Or check your session/JWT token
+    // Proceed to the next middleware or route handler
     return next();
   }
+  // If not authenticated, redirect to the login page
   res.redirect("/login");
 };
 
-// Redirect if logged in
+// Middleware to redirect users who are already logged in
 export const isLoggedIn = (req, res, next) => {
+  // If user is already authenticated
   if (req.isAuthenticated()) {
-    // Or check your session/JWT token
-    return res.redirect("/users"); // Redirect to home/dashboard if already logged in
+    // Redirect to the user list or dashboard to prevent accessing login/register again
+    return res.redirect("/users");
   }
+  // If not authenticated, proceed to the requested page (e.g., login)
   next();
 };

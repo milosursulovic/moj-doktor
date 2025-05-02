@@ -21,103 +21,107 @@ const app = express();
 // Set the port to environment variable or default to 3000
 const PORT = process.env.PORT || 3000;
 
-// Set the view engine to EJS (Embedded JavaScript)
+// Set the view engine to EJS (Embedded JavaScript) for rendering views
 app.set("view engine", "ejs");
-app.set("views", "./views");
+app.set("views", "./views"); // Specify the directory for view files
 
-// Enable Cross-Origin requests for all routes
+// Enable Cross-Origin requests for all routes (to allow requests from different domains)
 app.use(cors());
 
 // Automatically parse JSON bodies from incoming requests
 app.use(bodyParser.json());
 
-// Automatically parse URL-encoded bodies from incoming requests
+// Automatically parse URL-encoded bodies from incoming requests (useful for form submissions)
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Set up session and passport middleware
+// Set up session and passport middleware to manage sessions and user authentication
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "default_secret", // Secret for signing the session ID cookie
-    resave: false,
-    saveUninitialized: false,
+    resave: false, // Don't resave session if it's not modified
+    saveUninitialized: false, // Don't save uninitialized sessions
   })
 );
 
-app.use(passport.initialize());
-app.use(passport.session()); // This is what allows passport to persist sessions
+app.use(passport.initialize()); // Initialize passport for authentication handling
+app.use(passport.session()); // This allows passport to persist session across requests
 
-// Configure LocalStrategy
+// Configure LocalStrategy for local username/password authentication
 passport.use(
   new LocalStrategy(async (username, password, done) => {
     try {
+      // Check if a user with the given username exists
       const user = await User.findOne({ username });
       if (!user) return done(null, false, { message: "Incorrect username" });
 
+      // Compare the provided password with the stored hashed password
       const match = await bcrypt.compare(password, user.password);
       if (!match) return done(null, false, { message: "Incorrect password" });
 
+      // Authentication succeeded, return the user object
       return done(null, user);
     } catch (err) {
+      // Handle any errors during authentication
       console.error("Error during authentication:", err);
       return done(err);
     }
   })
 );
 
-// Serialize user
+// Serialize user into the session (store user ID)
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 
-// Deserialize user
+// Deserialize user from the session using the stored user ID
 passport.deserializeUser(async (id, done) => {
   try {
-    const user = await User.findById(id);
-    done(null, user);
+    const user = await User.findById(id); // Retrieve user from the database by ID
+    done(null, user); // Attach user to the session
   } catch (err) {
     console.error("Error deserializing user:", err);
     done(err);
   }
 });
 
-// Render login page
+// Render login page if user is not already logged in
 app.get("/login", isLoggedIn, (req, res) => {
-  // Render the login page
-  res.render("login");
+  res.render("login"); // Render the login page
 });
 
+// Handle login form submission, use passport authentication
 app.post(
   "/login",
   passport.authenticate("local", {
-    successRedirect: "/users",
-    failureRedirect: "/login",
+    successRedirect: "/users", // Redirect to the users page upon successful login
+    failureRedirect: "/login", // Redirect back to login page upon failure
   })
 );
 
-// Logout route
+// Logout route, invalidates the session
 app.get("/logout", (req, res) => {
   req.logout((err) => {
     if (err) {
-      return res.status(500).send("Failed to log out");
+      return res.status(500).send("Failed to log out"); // Handle logout errors
     }
-    res.redirect("/login"); // Redirect to the login page after logging out
+    res.redirect("/login"); // Redirect to login page after successful logout
   });
 });
 
-// Mount the user routes under the /users path
+// Mount user-related routes under the "/users" path
 app.use("/users", usersRoutes);
 
 // Connect to MongoDB using the connection string from the .env file
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => {
-    // If connection succeeds, start the Express server
+    // If connection is successful, start the Express server
     console.log("Connected to MongoDB");
     app.listen(PORT, () => {
       console.log(`Server is running on http://localhost:${PORT}`);
     });
   })
   .catch((error) => {
-    // If connection fails, log the error
+    // If the connection fails, log the error and exit the process
     console.error("Error connecting to MongoDB:", error);
   });
