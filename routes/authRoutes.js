@@ -7,10 +7,9 @@ import { isLoggedIn } from "../middlewares/auth.js"; // Middleware for checking 
 // Each function handles a specific user-related operation
 import {
   getLogin, // Renders the login page
+  handleLogin, // Handles the login form submission
   logout, // Handles user logout
 } from "../controllers/authController.js";
-
-import passport from "passport"; // Middleware for authentication
 
 // Create a new Express Router instance for defining user-related routes
 const router = express.Router();
@@ -18,14 +17,8 @@ const router = express.Router();
 // Render login page if user is not already logged in
 router.get("/login", isLoggedIn, getLogin);
 
-// Handle login form submission, use passport authentication
-router.post(
-  "/login",
-  passport.authenticate("local", {
-    successRedirect: "/users", // Redirect to the users page upon successful login
-    failureRedirect: "/auth/login", // Redirect back to login page upon failure
-  })
-);
+// Handle login form submission using handleLogin from the controller
+router.post("/login", handleLogin);
 
 // Logout route, invalidates the session
 router.get("/logout", logout);
