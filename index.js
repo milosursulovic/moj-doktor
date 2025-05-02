@@ -94,6 +94,16 @@ app.post(
   })
 );
 
+// Logout route
+app.get("/logout", (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      return res.status(500).send("Failed to log out");
+    }
+    res.redirect("/login"); // Redirect to the login page after logging out
+  });
+});
+
 // Mount the user routes under the /users path
 app.use("/users", usersRoutes);
 

@@ -126,8 +126,10 @@ export const getUsers = async (req, res) => {
     // Calculate the total number of pages based on the total users and the number of users per page (limit)
     const totalPages = Math.ceil(total / limit);
 
-    // Render the "index" view with users data, current page, total pages, and total users information
+    // Render the "index" view with users data, current page, total pages, and total users information,
+    // and include the logged-in user from req.user
     res.render("index", {
+      user: req.user, // Pass the logged-in user to the template
       users,
       currentPage: page,
       totalPages,

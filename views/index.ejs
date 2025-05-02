@@ -88,9 +88,33 @@
         color: white;
         border: none;
       }
+
+      /* Add this for the fixed logout button positioned at top right */
+      .logout-btn {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        padding: 8px 16px;
+        background-color: #ff5733;
+        color: white;
+        border: none;
+        cursor: pointer;
+        z-index: 1000; /* Ensure it's always on top */
+      }
+
+      .logout-btn:hover {
+        background-color: #ff2e00;
+      }
     </style>
   </head>
   <body>
+    <!-- Conditionally render Logout button if user is logged in -->
+    <% if (user) { %>
+      <button class="logout-btn" onclick="window.location.href='/logout';">
+        Logout
+      </button>
+    <% } %>
+
     <div class="header">
       <h2>Korisnici</h2>
     </div>
@@ -181,7 +205,6 @@
     </div>
 
     <script>
-
       function goToPage(page) {
         window.location.href = `/users?page=${page}&limit=10`;
       }
