@@ -207,9 +207,20 @@
     function searchUsers() {
       const query = document.getElementById('searchInput').value.trim();
 
-      // Update the URL to reflect current query and page = 1
-      const newUrl = `/users/?query=${encodeURIComponent(query)}&page=1&limit=10`;
-      history.pushState({}, '', newUrl); // this updates URL without reloading the page
+      // Update the URL based on whether the search input is empty or not
+      let newUrl = '/users/?page=1&limit=10'; // default URL with pagination and no query
+
+      if (query) {
+        newUrl = `/users/?query=${encodeURIComponent(query)}&page=1&limit=10`;
+      } else {
+        // If the search input is empty, remove the 'query' parameter from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.delete('query');
+        newUrl = `/users/?${urlParams.toString()}`;
+      }
+
+      // Update the browser history without reloading the page
+      history.pushState({}, '', newUrl);
 
       // Optional: reset to page 1
       currentPage = 1;
