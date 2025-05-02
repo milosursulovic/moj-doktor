@@ -141,13 +141,11 @@ export const getUsers = async (req, res) => {
   }
 };
 
-// Modify an existing user's data
+// This function handles modifying user data based on the provided user ID and request body.
 export const modifyUser = async (req, res) => {
   try {
-    // Get user ID from request params
     const userId = req.params.id;
 
-    // Extract updated user data from request body
     const {
       username,
       firstName,
@@ -156,29 +154,33 @@ export const modifyUser = async (req, res) => {
       phone,
       role,
       uniqueMasterCitizenNumber,
+      password,
     } = req.body;
 
-    // Update the user in the database
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      {
-        username,
-        firstName,
-        lastName,
-        mail,
-        phone,
-        role,
-        uniqueMasterCitizenNumber,
-      },
-      { new: true } // Return the updated document
-    );
+    const updateData = {
+      username,
+      firstName,
+      lastName,
+      mail,
+      phone,
+      role,
+      uniqueMasterCitizenNumber,
+    };
 
-    // If user not found, return 404
+    // Ako je poslata nova lozinka i nije prazna
+    if (password && password.trim() !== "") {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      updateData.password = hashedPassword;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
+      new: true,
+    });
+
     if (!updatedUser) {
       return res.status(404).json({ msg: "Korisnik nije pronađen" });
     }
 
-    // Return updated user data
     res.status(200).json(updatedUser);
   } catch (error) {
     res.status(500).json({ msg: error.message });

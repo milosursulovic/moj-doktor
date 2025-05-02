@@ -10,6 +10,7 @@ import {
   changeRole, // Function to update a user's role
 } from "../controllers/usersController.js";
 import { isAuthenticated } from "../middlewares/auth.js"; // Middleware to check if user is authenticated
+import User from "../models/User.js"; // Import the User model for database operations
 
 // Create a new router instance
 const router = express.Router();
@@ -31,9 +32,14 @@ router.get("/", getUsers);
 router.get("/:id", getUser);
 
 // Define route for rendering the edit user form (GET /users/edit-user/:id)
-router.get("/edit-user/:id", (req, res) => {
-  const userId = req.params.id;
-  res.render("edit-user", { userId });
+router.get("/edit-user/:id", async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findById(userId);
+    res.render("edit-user", { user });
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
 });
 
 // Define route for updating user data (PATCH /users/:id)

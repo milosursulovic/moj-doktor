@@ -2,7 +2,7 @@
 <html lang="sr">
   <head>
     <meta charset="UTF-8" />
-    <title>Uredi</title>
+    <title>Uredi Korisnika</title>
     <style>
       body {
         font-family: sans-serif;
@@ -97,35 +97,92 @@
   <body>
     <div class="modal">
       <div class="modal-header">
-        <h2>Uredi</h2>
+        <h2>Uredi Korisnika</h2>
       </div>
-      <form class="modal-body">
+      <form class="modal-body" id="editUserForm">
+        <input type="hidden" id="userId" value="<%= user._id %>" />
+
         <label>Korisničko ime: <span class="required">*</span></label>
-        <input type="text" value="sladan.dinulovic" disabled />
+        <input
+          type="text"
+          name="username"
+          value="<%= user.username %>"
+          disabled
+        />
 
         <label>Nova lozinka:</label>
-        <input type="password" placeholder="Lozinka" />
+        <input type="password" name="password" placeholder="Lozinka" />
 
         <label>Ime: <span class="required">*</span></label>
-        <input type="text" value="Slađan" />
+        <input
+          type="text"
+          name="firstName"
+          value="<%= user.firstName %>"
+          required
+        />
 
         <label>Prezime: <span class="required">*</span></label>
-        <input type="text" value="Dinulović" />
+        <input
+          type="text"
+          name="lastName"
+          value="<%= user.lastName %>"
+          required
+        />
 
         <label>E-mail: <span class="required">*</span></label>
-        <input type="email" value="borbolnica@sezampro.rs" />
+        <input type="email" name="email" value="<%= user.mail %>" required />
 
         <label>Mobilni telefon: <span class="required">*</span></label>
-        <input type="text" value="0668620058" />
+        <input type="text" name="phone" value="<%= user.phone %>" required />
 
         <div class="modal-footer">
           <button type="submit" class="btn save">Sačuvaj</button>
-          <button type="button" class="btn cancel" onclick="window.close()">
+          <button
+            type="button"
+            class="btn cancel"
+            onclick="window.location.href='/users'"
+          >
             Otkaži
           </button>
         </div>
       </form>
       <p class="note"><span class="required">*</span> Obavezna polja</p>
     </div>
+
+    <script>
+      document
+        .getElementById("editUserForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const userId = document.getElementById("userId").value;
+          const formData = new FormData(this);
+
+          const data = {};
+          formData.forEach((value, key) => {
+            if (value) data[key] = value; // exclude empty optional fields
+          });
+
+          try {
+            const res = await fetch(`/users/${userId}`, {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(data),
+            });
+
+            if (!res.ok) {
+              const error = await res.json();
+              alert("Greška: " + error.msg);
+            } else {
+              alert("Korisnik uspešno ažuriran");
+              window.location.href = "/users"; // or redirect to user profile
+            }
+          } catch (err) {
+            alert("Došlo je do greške: " + err.message);
+          }
+        });
+    </script>
   </body>
 </html>
