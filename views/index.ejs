@@ -292,7 +292,16 @@
     function goToPage(page) {
       const searchQuery = document.getElementById('searchInput')?.value?.trim();
 
-      window.location.href = `/users/?query=${searchQuery}&page=${page}&limit=10`;
+      // Start building the URL
+      let url = `/users/?page=${page}&limit=10`;
+
+      // Add the search query to the URL only if it's not empty
+      if (searchQuery) {
+        url += `&query=${searchQuery}`;
+      }
+
+      // Redirect to the new URL
+      window.location.href = url;
     }
 
     function editUser(userId) {
