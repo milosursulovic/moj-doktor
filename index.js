@@ -4,13 +4,13 @@ import mongoose from "mongoose"; // MongoDB ODM (Object Data Modeling) library
 import cors from "cors"; // Middleware for enabling Cross-Origin Resource Sharing
 import bodyParser from "body-parser"; // Middleware for parsing incoming JSON requests
 import usersRoutes from "./routes/usersRoutes.js"; // Import custom user route handlers
+import authRoutes from "./routes/authRoutes.js"; // Import custom auth route handlers
 import dotenv from "dotenv"; // Loads environment variables from a .env file
 import bcrypt from "bcrypt"; // Library for hashing passwords
 import User from "./models/User.js"; // Import User model
 import passport from "passport"; // Middleware for authentication
 import { Strategy as LocalStrategy } from "passport-local"; // Local authentication strategy
 import session from "express-session"; // Middleware for managing sessions
-import { isLoggedIn } from "./middlewares/auth.js"; // Middleware for checking if user is logged in
 
 // Load environment variables from .env file
 dotenv.config();
@@ -84,32 +84,22 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-// Render login page if user is not already logged in
-app.get("/login", isLoggedIn, (req, res) => {
-  res.render("login"); // Render the login page
-});
-
-// Handle login form submission, use passport authentication
-app.post(
-  "/login",
-  passport.authenticate("local", {
-    successRedirect: "/users", // Redirect to the users page upon successful login
-    failureRedirect: "/login", // Redirect back to login page upon failure
-  })
-);
-
-// Logout route, invalidates the session
-app.get("/logout", (req, res) => {
-  req.logout((err) => {
-    if (err) {
-      return res.status(500).send("Failed to log out"); // Handle logout errors
-    }
-    res.redirect("/login"); // Redirect to login page after successful logout
-  });
-});
+// Mount auth-related routes under the "/auth" path
+app.use("/auth", authRoutes);
 
 // Mount user-related routes under the "/users" path
 app.use("/users", usersRoutes);
+
+// Catch-all route for undefined routes
+app.use((req, res) => {
+  if (req.isAuthenticated()) {
+    // If logged in, redirect to '/users'
+    res.redirect("/users");
+  } else {
+    // If not logged in, redirect to the login page
+    res.redirect("/auth/login");
+  }
+});
 
 // Connect to MongoDB using the connection string from the .env file
 mongoose
