@@ -101,34 +101,41 @@ export const getUser = async (req, res) => {
   }
 };
 
-// Get all users with pagination support
+// This function handles fetching and rendering the users with pagination support.
 export const getUsers = async (req, res) => {
   try {
-    // Parse page and limit from query, defaulting if not provided
+    // Get the current page number from the query parameters, defaulting to page 1 if not provided
     const page = parseInt(req.query.page) || 1;
+
+    // Get the number of users to show per page (limit) from the query parameters, defaulting to 10 if not provided
     const limit = parseInt(req.query.limit) || 10;
 
-    // Calculate how many users to skip for pagination
+    // Calculate how many users to skip based on the current page and limit
     const skip = (page - 1) * limit;
 
-    // Find users, populate their health institution, sort by last login
+    // Find users from the database with pagination: skip the necessary number of users, limit the result to the specified number,
+    // and populate the health institution associated with each user. Sort by last login date (descending).
     const users = await User.find()
       .skip(skip)
       .limit(limit)
       .populate("healthInstitution")
       .sort({ lastLogin: -1 });
 
-    // Get total user count
+    // Get the total number of users in the database to calculate total pages for pagination
     const total = await User.countDocuments();
 
-    // Return paginated result
+    // Calculate the total number of pages based on the total users and the number of users per page (limit)
+    const totalPages = Math.ceil(total / limit);
+
+    // Render the "index" view with users data, current page, total pages, and total users information
     res.render("index", {
       users,
       currentPage: page,
-      totalPages: Math.ceil(total / limit),
+      totalPages,
       totalUsers: total,
     });
   } catch (error) {
+    // If an error occurs, respond with a 500 status code and the error message
     res.status(500).json({ msg: error.message });
   }
 };

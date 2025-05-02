@@ -165,16 +165,27 @@
     </table>
 
     <div class="pagination">
-      <button>&laquo;</button>
-      <button class="active">1</button>
-      <button>2</button>
-      <button>3</button>
-      <span>...</span>
-      <button>22</button>
-      <button>&raquo;</button>
+      <button 
+        <%= currentPage === 1 ? 'disabled' : '' %> 
+        onclick="goToPage(<%= currentPage - 1 %>)">&laquo;</button>
+      
+      <% for (let i = 1; i <= totalPages; i++) { %>
+        <button 
+          class="<%= i === currentPage ? 'active' : '' %>" 
+          onclick="goToPage(<%= i %>)"><%= i %></button>
+      <% } %>
+      
+      <button 
+        <%= currentPage === totalPages ? 'disabled' : '' %> 
+        onclick="goToPage(<%= currentPage + 1 %>)">&raquo;</button>
     </div>
 
     <script>
+
+      function goToPage(page) {
+        window.location.href = `/users?page=${page}&limit=10`;
+      }
+
       function editUser(userId) {
         window.location.href = `/users/edit-user/${userId}`;
       }
