@@ -12,7 +12,7 @@ export const handleLogin = async (req, res, next) => {
       return next(err); // Handle any internal errors
     }
     if (!user) {
-      return res.redirect("/auth/login"); // Redirect to login if authentication fails
+      return res.redirect("/login"); // Redirect to login if authentication fails
     }
 
     // Log the user in by attaching the user to the session
@@ -45,6 +45,6 @@ export const logout = (req, res) => {
       return res.status(500).send("Failed to log out");
     }
     // If logout is successful, redirect the user to the login page
-    res.redirect("/auth/login");
+    res.redirect("/login");
   });
 };

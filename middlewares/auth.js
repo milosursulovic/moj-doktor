@@ -8,7 +8,7 @@ export const isAuthenticated = (req, res, next) => {
     return next();
   }
   // If not authenticated, redirect to the login page
-  res.redirect("/auth/login");
+  res.redirect("/login");
 };
 
 // Middleware to redirect users who are already logged in

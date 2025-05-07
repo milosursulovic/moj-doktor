@@ -4,7 +4,8 @@ import mongoose from "mongoose"; // MongoDB ODM (Object Data Modeling) library
 import cors from "cors"; // Middleware for enabling Cross-Origin Resource Sharing
 import bodyParser from "body-parser"; // Middleware for parsing incoming JSON requests
 import usersRoutes from "./routes/usersRoutes.js"; // Import custom user route handlers
-import authRoutes from "./routes/authRoutes.js"; // Import custom auth route handlers
+import loginRoutes from "./routes/auth/loginRoutes.js"; // Import login route handlers
+import logoutRoutes from "./routes/auth/logoutRoutes.js"; // Import logout route handlers
 import dotenv from "dotenv"; // Loads environment variables from a .env file
 import bcrypt from "bcrypt"; // Library for hashing passwords
 import User from "./models/User.js"; // Import User model
@@ -84,8 +85,11 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-// Mount auth-related routes under the "/auth" path
-app.use("/auth", authRoutes);
+// Mount login route under "/login"
+app.use("/login", loginRoutes);
+
+// Mount logout route under "/logout"
+app.use("/logout", logoutRoutes);
 
 // Mount user-related routes under the "/users" path
 app.use("/users", usersRoutes);
@@ -97,7 +101,7 @@ app.use((req, res) => {
     res.redirect("/users");
   } else {
     // If not logged in, redirect to the login page
-    res.redirect("/auth/login");
+    res.redirect("/login");
   }
 });
 
