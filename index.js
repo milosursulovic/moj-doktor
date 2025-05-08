@@ -7,6 +7,7 @@ import usersRoutes from "./routes/usersRoutes.js"; // Import custom user route h
 import loginRoutes from "./routes/auth/loginRoutes.js"; // Import login route handlers
 import logoutRoutes from "./routes/auth/logoutRoutes.js"; // Import logout route handlers
 import referralsRoutes from "./routes/referralsRoutes.js"; // Import referrals route handlers
+import calendarRoutes from "./routes/calendarRoutes.js"; // Import calendar route handlers
 import dotenv from "dotenv"; // Loads environment variables from a .env file
 import bcrypt from "bcrypt"; // Library for hashing passwords
 import User from "./models/User.js"; // Import User model
@@ -97,6 +98,9 @@ app.use("/users", usersRoutes);
 
 // Mount referrals-related routes under the "/referrals" path
 app.use("/referrals", referralsRoutes);
+
+// Mount calendar-related routes under the "/calendar" path
+app.use("/calendar", calendarRoutes);
 
 // Catch-all route for undefined routes
 app.use((req, res) => {
