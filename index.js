@@ -11,6 +11,7 @@ import calendarRoutes from "./routes/calendarRoutes.js"; // Import calendar rout
 import referencePagesRoutes from "./routes/referencePagesRoutes.js"; // Import referencePages routes handlers
 import instructionsRoutes from "./routes/instructionsRoutes.js"; // Import instructions routes handlers
 import systemUpdatesRoutes from "./routes/systemUpdatesRoutes.js"; // Import system updates routes handlers
+import publicPortalRoutes from "./routes/publicPortalRoutes.js"; // Import public portal routes handlers
 import dotenv from "dotenv"; // Loads environment variables from a .env file
 import bcrypt from "bcrypt"; // Library for hashing passwords
 import User from "./models/User.js"; // Import User model
@@ -113,6 +114,9 @@ app.use("/instructions", instructionsRoutes);
 
 // Mount system-updates-related routes under the "/system-updates" path
 app.use("/system-updates", systemUpdatesRoutes);
+
+// Mount public-portal-related routes under the "/public-portal" path
+app.use("/public-portal", publicPortalRoutes);
 
 // Catch-all route for undefined routes
 app.use((req, res) => {
