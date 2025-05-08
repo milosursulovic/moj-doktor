@@ -49,6 +49,36 @@
       font-weight: bold;
     }
 
+    .dropdown {
+      position: relative;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #ffffff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      min-width: 160px;
+      z-index: 1000;
+      top: 100%;
+      left: 0;
+    }
+
+    .dropdown-content a {
+      color: #333;
+      padding: 10px 16px;
+      display: block;
+      text-decoration: none;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #f0f0f0;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
     .content {
       padding: 20px;
     }
@@ -137,12 +167,62 @@
 <body>
 
   <div class="top-nav">
+
     <div class="nav-left">
-      <a href="/referrals" class="nav-item active">Uputi</a>
-      <a href="/calendar" class="nav-item">Kalendar</a>
-      <a href="/reports" class="nav-item">Izveštaji</a>
-      <a href="/reference-pages" class="nav-item">Referentne Strane</a>
-      <a href="/instructions" class="nav-item">Uputstva</a>
+      <div class="dropdown">
+        <a href="#" class="nav-item">Uputi</a>
+        <div class="dropdown-content">
+          <a href="/referrals">Izveštaj za kreirane šablone za vreme prijema</a>
+        </div>
+      </div>
+
+      <div class="dropdown">
+        <a href="#" class="nav-item">Kalendar</a>
+        <div class="dropdown-content">
+          <a href="/calendar">Kalendar aktivnosti</a>
+          <a href="/calendar">Pregled kalendara aktivnosti</a>
+        </div>
+      </div>
+
+      <div class="dropdown">
+        <a href="#" class="nav-item">Izveštaji</a>
+        <div class="dropdown-content">
+          <a href="/reports">Regularni realizovani pregledi</a>
+          <a href="/reports">Realizacija uputa po danu</a>
+          <a href="/reports">Izveštaj o broju definisanih termina</a>
+          <a href="/reports">Izveštaj o broju definisanih termina na dan</a>
+          <a href="/reports">Kumulativni izveštaj definisanih termina</a>
+          <a href="/reports">Izveštaj evidencije o radu</a>
+          <a href="/reports">Termini po institucijama u procentima (%)</a>
+          <a href="/reports">Slobodni termini po tipu slota</a>
+          <a href="/reports">Izveštaj o broju definisanih termina po klinikama</a>
+          <a href="/reports">Mere izvšenja po ustanovi i specijalnost</a>
+        </div>
+      </div>
+
+      <div class="dropdown">
+        <a href="#" class="nav-item">Referentne Strane</a>
+        <div class="dropdown-content">
+          <a href="/reference-pages">Ambulante</a>
+          <a href="/reference-pages">Oprema</a>
+          <a href="/reference-pages">Usluge za radiodijagnostiku</a>
+          <a href="/reference-pages">Hirurške intervencije</a>
+          <a href="/reference-pages">Zdravstvene ustanove</a>
+          <a href="/reference-pages">Filijale i ispostave</a>
+          <a href="/reference-pages">Bolniča odeljenja</a>
+          <a href="/users">Korisnici</a>
+          <a href="/reference-pages">Lekari</a>
+          <a href="/reference-pages">Neradni dani</a>
+        </div>
+      </div>
+
+      <div class="dropdown">
+        <a href="#" class="nav-item">Uputstva</a>
+        <div class="dropdown-content">
+          <a href="/instructions">Dokumenti</a>
+        </div>
+      </div>
+
       <a href="/system-updates" class="nav-item">Novine u sistemu</a>
       <a href="/public-portal" class="nav-item">Javni portal</a>
       <a href="/document-upload" class="nav-item">Otpremanje dokumenata</a>
@@ -151,7 +231,7 @@
       <!-- Conditionally render Logout button if user is logged in -->
       <% if (user) { %>
         <a href="/logout" class="nav-item">Logout</a>
-      <% } %>
+        <% } %>
     </div>
   </div>
 
@@ -176,15 +256,15 @@
       </button>
       <button>Resetuj sortiranje</button>
       <select id="sortField" onchange="searchUsers()">
-        <option value="firstName" <%= sortBy === 'firstName' ? 'selected' : '' %>>Ime</option>
-        <option value="lastName" <%= sortBy === 'lastName' ? 'selected' : '' %>>Prezime</option>
-        <option value="username" <%= sortBy === 'username' ? 'selected' : '' %>>Korisničko ime</option>
-        <option value="lastLogin" <%= sortBy === 'lastLogin' ? 'selected' : '' %>>Poslednja prijava</option>
+        <option value="firstName" <%=sortBy==='firstName' ? 'selected' : '' %>>Ime</option>
+        <option value="lastName" <%=sortBy==='lastName' ? 'selected' : '' %>>Prezime</option>
+        <option value="username" <%=sortBy==='username' ? 'selected' : '' %>>Korisničko ime</option>
+        <option value="lastLogin" <%=sortBy==='lastLogin' ? 'selected' : '' %>>Poslednja prijava</option>
       </select>
 
       <select id="sortOrder" onchange="searchUsers()">
-        <option value="asc" <%= sortOrder === 'asc' ? 'selected' : '' %>>Rastuće</option>
-        <option value="desc" <%= sortOrder === 'desc' ? 'selected' : '' %>>Opadajuće</option>
+        <option value="asc" <%=sortOrder==='asc' ? 'selected' : '' %>>Rastuće</option>
+        <option value="desc" <%=sortOrder==='desc' ? 'selected' : '' %>>Opadajuće</option>
       </select>
     </div>
 
@@ -205,42 +285,57 @@
         </tr>
       </thead>
       <tbody>
-        <% users.forEach((user, index) => { %>
-        <tr>
-          <td>
-            <%= index + 1 + (currentPage - 1) * totalUsers / totalPages %>
-          </td>
-          <td><%= user.username %></td>
-          <td><%= user.firstName %></td>
-          <td><%= user.lastName %></td>
-          <td><%= user.mail %></td>
-          <td><%= user.healthInstitution.name %></td>
-          <td>✖</td>
-          <td><%= new Date(user.lastLogin).toLocaleString() %></td>
-          <td>
-            <button class="role-btn" onclick="manageRoles('<%= user._id %>')">
-              Uloge
-            </button>
-          </td>
-          <td>
-            <button class="edit-btn" onclick="editUser('<%= user._id %>')">
-              Uredi
-            </button>
-          </td>
-          <td>✔</td>
-        </tr>
-        <% }); %>
+        <% users.forEach((user, index)=> { %>
+          <tr>
+            <td>
+              <%= index + 1 + (currentPage - 1) * totalUsers / totalPages %>
+            </td>
+            <td>
+              <%= user.username %>
+            </td>
+            <td>
+              <%= user.firstName %>
+            </td>
+            <td>
+              <%= user.lastName %>
+            </td>
+            <td>
+              <%= user.mail %>
+            </td>
+            <td>
+              <%= user.healthInstitution.name %>
+            </td>
+            <td>✖</td>
+            <td>
+              <%= new Date(user.lastLogin).toLocaleString() %>
+            </td>
+            <td>
+              <button class="role-btn" onclick="manageRoles('<%= user._id %>')">
+                Uloge
+              </button>
+            </td>
+            <td>
+              <button class="edit-btn" onclick="editUser('<%= user._id %>')">
+                Uredi
+              </button>
+            </td>
+            <td>✔</td>
+          </tr>
+          <% }); %>
       </tbody>
     </table>
 
     <div class="pagination">
-      <button <%= currentPage === 1 ? 'disabled' : '' %> onclick="goToPage(<%= currentPage - 1 %>)">&laquo;</button>
+      <button <%=currentPage===1 ? 'disabled' : '' %> onclick="goToPage(<%= currentPage - 1 %>)">&laquo;</button>
 
-      <% for (let i = 1; i <= totalPages; i++) { %>
-      <button class="<%= i === currentPage ? 'active' : '' %>" onclick="goToPage(<%= i %>)"><%= i %></button>
-      <% } %>
+      <% for (let i=1; i <=totalPages; i++) { %>
+        <button class="<%= i === currentPage ? 'active' : '' %>" onclick="goToPage(<%= i %>)">
+          <%= i %>
+        </button>
+        <% } %>
 
-      <button <%= currentPage === totalPages ? 'disabled' : '' %> onclick="goToPage(<%= currentPage + 1 %>)">&raquo;</button>
+          <button <%=currentPage===totalPages ? 'disabled' : '' %> onclick="goToPage(<%= currentPage + 1 %>
+              )">&raquo;</button>
     </div>
 
   </div>
