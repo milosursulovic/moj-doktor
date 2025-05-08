@@ -6,6 +6,7 @@ import bodyParser from "body-parser"; // Middleware for parsing incoming JSON re
 import usersRoutes from "./routes/usersRoutes.js"; // Import custom user route handlers
 import loginRoutes from "./routes/auth/loginRoutes.js"; // Import login route handlers
 import logoutRoutes from "./routes/auth/logoutRoutes.js"; // Import logout route handlers
+import referralsRoutes from "./routes/referralsRoutes.js"; // Import referrals route handlers
 import dotenv from "dotenv"; // Loads environment variables from a .env file
 import bcrypt from "bcrypt"; // Library for hashing passwords
 import User from "./models/User.js"; // Import User model
@@ -93,6 +94,9 @@ app.use("/logout", logoutRoutes);
 
 // Mount user-related routes under the "/users" path
 app.use("/users", usersRoutes);
+
+// Mount referrals-related routes under the "/referrals" path
+app.use("/referrals", referralsRoutes);
 
 // Catch-all route for undefined routes
 app.use((req, res) => {
