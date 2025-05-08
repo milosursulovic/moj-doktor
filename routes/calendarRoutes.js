@@ -2,7 +2,7 @@
 import express from "express";
 
 // Import controller functions from the calendarController
-// Each function handles a specific referral-related operation
+// Each function handles a specific calendar-related operation
 import {
   getCalendar, // Fetches all calendar, with pagination support
 } from "../controllers/calendarController.js";

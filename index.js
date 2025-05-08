@@ -10,6 +10,7 @@ import referralsRoutes from "./routes/referralsRoutes.js"; // Import referrals r
 import calendarRoutes from "./routes/calendarRoutes.js"; // Import calendar routes handlers
 import referencePagesRoutes from "./routes/referencePagesRoutes.js"; // Import referencePages routes handlers
 import instructionsRoutes from "./routes/instructionsRoutes.js"; // Import instructions routes handlers
+import systemUpdatesRoutes from "./routes/systemUpdatesRoutes.js"; // Import system updates routes handlers
 import dotenv from "dotenv"; // Loads environment variables from a .env file
 import bcrypt from "bcrypt"; // Library for hashing passwords
 import User from "./models/User.js"; // Import User model
@@ -109,6 +110,9 @@ app.use("/reference-pages", referencePagesRoutes);
 
 // Mount instructions-related routes under the "/instructions" path
 app.use("/instructions", instructionsRoutes);
+
+// Mount system-updates-related routes under the "/system-updates" path
+app.use("/system-updates", systemUpdatesRoutes);
 
 // Catch-all route for undefined routes
 app.use((req, res) => {

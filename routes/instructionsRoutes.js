@@ -2,7 +2,7 @@
 import express from "express";
 
 // Import controller functions from the instructionsController
-// Each function handles a specific referral-related operation
+// Each function handles a specific instructions-related operation
 import {
   getInstructions, // Fetches all instructions, with pagination support
 } from "../controllers/instructionsController.js";

@@ -2,7 +2,7 @@
 import express from "express";
 
 // Import controller functions from the referencePagesController
-// Each function handles a specific referral-related operation
+// Each function handles a specific reference-pages-related operation
 import {
   getReferencePages, // Fetches all reference pages, with pagination support
 } from "../controllers/referencePagesController.js";
