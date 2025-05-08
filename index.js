@@ -3,11 +3,12 @@ import express from "express"; // Web framework for handling HTTP requests
 import mongoose from "mongoose"; // MongoDB ODM (Object Data Modeling) library
 import cors from "cors"; // Middleware for enabling Cross-Origin Resource Sharing
 import bodyParser from "body-parser"; // Middleware for parsing incoming JSON requests
-import usersRoutes from "./routes/usersRoutes.js"; // Import custom user route handlers
-import loginRoutes from "./routes/auth/loginRoutes.js"; // Import login route handlers
-import logoutRoutes from "./routes/auth/logoutRoutes.js"; // Import logout route handlers
-import referralsRoutes from "./routes/referralsRoutes.js"; // Import referrals route handlers
-import calendarRoutes from "./routes/calendarRoutes.js"; // Import calendar route handlers
+import usersRoutes from "./routes/usersRoutes.js"; // Import custom user routes handlers
+import loginRoutes from "./routes/auth/loginRoutes.js"; // Import login routes handlers
+import logoutRoutes from "./routes/auth/logoutRoutes.js"; // Import logout routes handlers
+import referralsRoutes from "./routes/referralsRoutes.js"; // Import referrals routes handlers
+import calendarRoutes from "./routes/calendarRoutes.js"; // Import calendar routes handlers
+import referencePagesRoutes from "./routes/referencePagesRoutes.js"; // Import referencePages routes handlers
 import dotenv from "dotenv"; // Loads environment variables from a .env file
 import bcrypt from "bcrypt"; // Library for hashing passwords
 import User from "./models/User.js"; // Import User model
@@ -101,6 +102,9 @@ app.use("/referrals", referralsRoutes);
 
 // Mount calendar-related routes under the "/calendar" path
 app.use("/calendar", calendarRoutes);
+
+// Mount reference-pages-related routes under the "/reference-pages" path
+app.use("/reference-pages", referencePagesRoutes);
 
 // Catch-all route for undefined routes
 app.use((req, res) => {
