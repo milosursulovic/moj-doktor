@@ -1,1 +1,279 @@
-<h1>Calendar</h1>
+<!DOCTYPE html>
+<html lang="sr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Kalendar aktivnosti</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: #2c2c2c;
+            color: white;
+            padding: 10px 20px;
+        }
+
+        .calendar-container {
+            display: flex;
+            align-items: flex-start;
+            overflow-x: hidden;
+        }
+
+        .sidebar {
+            width: 250px;
+            /* fixed width */
+            min-width: 250px;
+            padding: 15px;
+            background: #f2f2f2;
+            box-shadow: inset -1px 0 0 #ccc;
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+
+        .mini-calendar {
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .calendar-header button {
+            background-color: #eee;
+            border: none;
+            padding: 4px 8px;
+            cursor: pointer;
+        }
+
+        .mini-calendar table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+
+        .mini-calendar th,
+        .mini-calendar td {
+            text-align: center;
+            padding: 4px;
+            width: 14.28%;
+        }
+
+        .mini-calendar td {
+            background-color: #fff;
+            border: 1px solid #ddd;
+        }
+
+        .mini-calendar .template-btn {
+            width: 100%;
+            padding: 6px;
+            background-color: #e7e7e7;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .calendar {
+            flex: 1;
+            padding: 15px;
+            overflow-x: auto;
+            box-sizing: border-box;
+        }
+
+        .calendar h2 {
+            margin-top: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            word-wrap: break-word;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            text-align: center;
+            padding: 6px;
+            min-width: 90px;
+        }
+
+        th {
+            background-color: #e0e0e0;
+        }
+
+        .time-column {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+
+        .highlight {
+            background-color: #ffffcc;
+        }
+
+        .controls {
+            margin-bottom: 15px;
+        }
+
+        .controls select,
+        .controls button {
+            margin-right: 10px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>IZIS | Kalendar aktivnosti</h1>
+    </header>
+
+    <div class="calendar-container">
+        <div class="sidebar">
+            <label for="calendar">Maj 2025</label>
+            <div class="mini-calendar">
+                <div class="calendar-header">
+                    <button>&lt;</button>
+                    <span>Maj 2025</span>
+                    <button>&gt;</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>П</th>
+                            <th>У</th>
+                            <th>С</th>
+                            <th>Ч</th>
+                            <th>П</th>
+                            <th>С</th>
+                            <th>Н</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>3</td>
+                            <td>4</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>6</td>
+                            <td>7</td>
+                            <td>8</td>
+                            <td>9</td>
+                            <td>10</td>
+                            <td>11</td>
+                        </tr>
+                        <tr>
+                            <td>12</td>
+                            <td>13</td>
+                            <td>14</td>
+                            <td>15</td>
+                            <td>16</td>
+                            <td>17</td>
+                            <td>18</td>
+                        </tr>
+                        <tr>
+                            <td>19</td>
+                            <td>20</td>
+                            <td>21</td>
+                            <td>22</td>
+                            <td>23</td>
+                            <td>24</td>
+                            <td>25</td>
+                        </tr>
+                        <tr>
+                            <td>26</td>
+                            <td>27</td>
+                            <td>28</td>
+                            <td>29</td>
+                            <td>30</td>
+                            <td>31</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button class="template-btn">Нови шаблон</button>
+            </div>
+        </div>
+
+        <div class="calendar">
+            <div class="controls">
+                <strong>5 Maj - 11 Maj</strong>
+                <button>Obriši vreme za prije</button>
+                <select>
+                    <option>Vreme trajanja 15</option>
+                </select>
+                <select>
+                    <option>Interval 15</option>
+                </select>
+                <select>
+                    <option>Radno vreme</option>
+                </select>
+                <button>Celokupne aktivnosti</button>
+            </div>
+
+            <table>
+                <tr>
+                    <th>Vreme</th>
+                    <th>Ponedeljak 5.05</th>
+                    <th>Utorak 6.05</th>
+                    <th>Sreda 7.05</th>
+                    <th>Četvrtak 8.05</th>
+                    <th class="highlight">Petak 9.05</th>
+                    <th>Subota 10.05</th>
+                    <th>Nedelja 11.05</th>
+                </tr>
+
+                <script>
+                    const startHour = 7;
+                    const startMinute = 30;
+                    const endHour = 13;
+                    const endMinute = 45;
+
+                    const pad = n => n.toString().padStart(2, '0');
+                    let html = '';
+
+                    for (let hour = startHour; hour <= endHour; hour++) {
+                        for (let min = 0; min < 60; min += 15) {
+                            if (hour === startHour && min < startMinute) continue;
+                            if (hour === endHour && min > endMinute) break;
+
+                            const time = `${pad(hour)}:${pad(min)}`;
+                            html += `
+                                <tr>
+                                    <td class="time-column">${time}</td>
+                                    <td></td><td></td><td></td><td></td><td class="highlight"></td><td></td><td></td>
+                                </tr>`;
+                        }
+                    }
+
+                    document.write(html);
+                </script>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>
