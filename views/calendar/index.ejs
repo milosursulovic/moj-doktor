@@ -140,143 +140,146 @@
   </style>
 
   <link rel="stylesheet" href="/styles/topbar.css">
+  <link rel="stylesheet" href="/styles/content.css">
 </head>
 
 <body>
 
   <%- include('../partials/topbar') %>
 
-  <header>
-    <h1>IZIS | Kalendar aktivnosti</h1>
-  </header>
+  <div class="content">
+    <header>
+      <h1>IZIS | Kalendar aktivnosti</h1>
+    </header>
 
-  <div class="calendar-container">
-    <div class="sidebar">
-      <label for="calendar">Maj 2025</label>
-      <div class="mini-calendar">
-        <div class="calendar-header">
-          <button>&lt;</button>
-          <span>Maj 2025</span>
-          <button>&gt;</button>
+    <div class="calendar-container">
+      <div class="sidebar">
+        <label for="calendar">Maj 2025</label>
+        <div class="mini-calendar">
+          <div class="calendar-header">
+            <button>&lt;</button>
+            <span>Maj 2025</span>
+            <button>&gt;</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>П</th>
+                <th>У</th>
+                <th>С</th>
+                <th>Ч</th>
+                <th>П</th>
+                <th>С</th>
+                <th>Н</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>6</td>
+                <td>7</td>
+                <td>8</td>
+                <td>9</td>
+                <td>10</td>
+                <td>11</td>
+              </tr>
+              <tr>
+                <td>12</td>
+                <td>13</td>
+                <td>14</td>
+                <td>15</td>
+                <td>16</td>
+                <td>17</td>
+                <td>18</td>
+              </tr>
+              <tr>
+                <td>19</td>
+                <td>20</td>
+                <td>21</td>
+                <td>22</td>
+                <td>23</td>
+                <td>24</td>
+                <td>25</td>
+              </tr>
+              <tr>
+                <td>26</td>
+                <td>27</td>
+                <td>28</td>
+                <td>29</td>
+                <td>30</td>
+                <td>31</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+          <button class="template-btn">Нови шаблон</button>
         </div>
+      </div>
+
+      <div class="calendar">
+        <div class="controls">
+          <strong>5 Maj - 11 Maj</strong>
+          <button>Obriši vreme za prije</button>
+          <select>
+            <option>Vreme trajanja 15</option>
+          </select>
+          <select>
+            <option>Interval 15</option>
+          </select>
+          <select>
+            <option>Radno vreme</option>
+          </select>
+          <button>Celokupne aktivnosti</button>
+        </div>
+
         <table>
-          <thead>
-            <tr>
-              <th>П</th>
-              <th>У</th>
-              <th>С</th>
-              <th>Ч</th>
-              <th>П</th>
-              <th>С</th>
-              <th>Н</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td>1</td>
-              <td>2</td>
-              <td>3</td>
-              <td>4</td>
-            </tr>
-            <tr>
-              <td>5</td>
-              <td>6</td>
-              <td>7</td>
-              <td>8</td>
-              <td>9</td>
-              <td>10</td>
-              <td>11</td>
-            </tr>
-            <tr>
-              <td>12</td>
-              <td>13</td>
-              <td>14</td>
-              <td>15</td>
-              <td>16</td>
-              <td>17</td>
-              <td>18</td>
-            </tr>
-            <tr>
-              <td>19</td>
-              <td>20</td>
-              <td>21</td>
-              <td>22</td>
-              <td>23</td>
-              <td>24</td>
-              <td>25</td>
-            </tr>
-            <tr>
-              <td>26</td>
-              <td>27</td>
-              <td>28</td>
-              <td>29</td>
-              <td>30</td>
-              <td>31</td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
-        <button class="template-btn">Нови шаблон</button>
-      </div>
-    </div>
+          <tr>
+            <th>Vreme</th>
+            <th>Ponedeljak 5.05</th>
+            <th>Utorak 6.05</th>
+            <th>Sreda 7.05</th>
+            <th>Četvrtak 8.05</th>
+            <th class="highlight">Petak 9.05</th>
+            <th>Subota 10.05</th>
+            <th>Nedelja 11.05</th>
+          </tr>
 
-    <div class="calendar">
-      <div class="controls">
-        <strong>5 Maj - 11 Maj</strong>
-        <button>Obriši vreme za prije</button>
-        <select>
-          <option>Vreme trajanja 15</option>
-        </select>
-        <select>
-          <option>Interval 15</option>
-        </select>
-        <select>
-          <option>Radno vreme</option>
-        </select>
-        <button>Celokupne aktivnosti</button>
-      </div>
+          <script>
+            const startHour = 7;
+            const startMinute = 30;
+            const endHour = 13;
+            const endMinute = 45;
 
-      <table>
-        <tr>
-          <th>Vreme</th>
-          <th>Ponedeljak 5.05</th>
-          <th>Utorak 6.05</th>
-          <th>Sreda 7.05</th>
-          <th>Četvrtak 8.05</th>
-          <th class="highlight">Petak 9.05</th>
-          <th>Subota 10.05</th>
-          <th>Nedelja 11.05</th>
-        </tr>
+            const pad = n => n.toString().padStart(2, '0');
+            let html = '';
 
-        <script>
-          const startHour = 7;
-          const startMinute = 30;
-          const endHour = 13;
-          const endMinute = 45;
+            for (let hour = startHour; hour <= endHour; hour++) {
+              for (let min = 0; min < 60; min += 15) {
+                if (hour === startHour && min < startMinute) continue;
+                if (hour === endHour && min > endMinute) break;
 
-          const pad = n => n.toString().padStart(2, '0');
-          let html = '';
-
-          for (let hour = startHour; hour <= endHour; hour++) {
-            for (let min = 0; min < 60; min += 15) {
-              if (hour === startHour && min < startMinute) continue;
-              if (hour === endHour && min > endMinute) break;
-
-              const time = `${pad(hour)}:${pad(min)}`;
-              html += `
+                const time = `${pad(hour)}:${pad(min)}`;
+                html += `
                                 <tr>
                                     <td class="time-column">${time}</td>
                                     <td></td><td></td><td></td><td></td><td class="highlight"></td><td></td><td></td>
                                 </tr>`;
+              }
             }
-          }
 
-          document.write(html);
-        </script>
-      </table>
+            document.write(html);
+          </script>
+        </table>
+      </div>
     </div>
   </div>
 </body>
