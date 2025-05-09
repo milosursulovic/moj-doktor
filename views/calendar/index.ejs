@@ -34,6 +34,26 @@
       flex-shrink: 0;
     }
 
+    .dropdown-container {
+      margin-bottom: 15px;
+    }
+
+    .dropdown-container label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .dropdown-container select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #f9f9f9;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
     .mini-calendar {
       border: 1px solid #ccc;
       background-color: #f9f9f9;
@@ -154,6 +174,16 @@
 
     <div class="calendar-container">
       <div class="sidebar">
+        <div class="dropdown-container">
+          <label for="person">Izaberite lekara:</label>
+          <select id="person">
+            <option value="person1">Marko Jovanović</option>
+            <option value="person2">Ana Petrović</option>
+            <option value="person3">Jovana Lukić</option>
+            <option value="person4">Nikola Savić</option>
+            <option value="person5">Milan Kovačević</option>
+          </select>
+        </div>
         <label for="calendar">Maj 2025</label>
         <div class="mini-calendar">
           <div class="calendar-header">
