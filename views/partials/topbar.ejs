@@ -1,0 +1,68 @@
+<div class="top-nav">
+
+  <div class="nav-left">
+    <div class="dropdown">
+      <a href="#" class="nav-item">Uputi</a>
+      <div class="dropdown-content">
+        <a href="/referrals">Izveštaj za kreirane šablone za vreme prijema</a>
+      </div>
+    </div>
+
+    <div class="dropdown">
+      <a href="#" class="nav-item">Kalendar</a>
+      <div class="dropdown-content">
+        <a href="/calendar">Kalendar aktivnosti</a>
+        <a href="/calendar">Pregled kalendara aktivnosti</a>
+      </div>
+    </div>
+
+    <div class="dropdown">
+      <a href="#" class="nav-item">Izveštaji</a>
+      <div class="dropdown-content">
+        <a href="/reports">Regularni realizovani pregledi</a>
+        <a href="/reports">Realizacija uputa po danu</a>
+        <a href="/reports">Izveštaj o broju definisanih termina</a>
+        <a href="/reports">Izveštaj o broju definisanih termina na dan</a>
+        <a href="/reports">Kumulativni izveštaj definisanih termina</a>
+        <a href="/reports">Izveštaj evidencije o radu</a>
+        <a href="/reports">Termini po institucijama u procentima (%)</a>
+        <a href="/reports">Slobodni termini po tipu slota</a>
+        <a href="/reports">Izveštaj o broju definisanih termina po klinikama</a>
+        <a href="/reports">Mere izvšenja po ustanovi i specijalnost</a>
+      </div>
+    </div>
+
+    <div class="dropdown">
+      <a href="#" class="nav-item">Referentne Strane</a>
+      <div class="dropdown-content">
+        <a href="/reference-pages">Ambulante</a>
+        <a href="/reference-pages">Oprema</a>
+        <a href="/reference-pages">Usluge za radiodijagnostiku</a>
+        <a href="/reference-pages">Hirurške intervencije</a>
+        <a href="/reference-pages">Zdravstvene ustanove</a>
+        <a href="/reference-pages">Filijale i ispostave</a>
+        <a href="/reference-pages">Bolniča odeljenja</a>
+        <a href="/users">Korisnici</a>
+        <a href="/reference-pages">Lekari</a>
+        <a href="/reference-pages">Neradni dani</a>
+      </div>
+    </div>
+
+    <div class="dropdown">
+      <a href="#" class="nav-item">Uputstva</a>
+      <div class="dropdown-content">
+        <a href="/instructions">Dokumenti</a>
+      </div>
+    </div>
+
+    <a href="/system-updates" class="nav-item">Novine u sistemu</a>
+    <a href="/public-portal" class="nav-item">Javni portal</a>
+    <a href="/document-upload" class="nav-item">Otpremanje dokumenata</a>
+  </div>
+  <div class="nav-right">
+    <!-- Conditionally render Logout button if user is logged in -->
+    <% if (user) { %>
+    <a href="/logout" class="nav-item">Logout</a>
+    <% } %>
+  </div>
+</div>

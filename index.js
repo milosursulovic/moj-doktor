@@ -19,6 +19,11 @@ import User from "./models/User.js"; // Import User model
 import passport from "passport"; // Middleware for authentication
 import { Strategy as LocalStrategy } from "passport-local"; // Local authentication strategy
 import session from "express-session"; // Middleware for managing sessions
+import path from "path"; // Node.js module for handling file and directory paths
+import { fileURLToPath } from 'url'; // Utility to convert import.meta.url to a file path
+
+const __filename = fileURLToPath(import.meta.url); // Get the current file path in ES module
+const __dirname = path.dirname(__filename); // Get the directory name from file path
 
 // Load environment variables from .env file
 dotenv.config();
@@ -91,6 +96,9 @@ passport.deserializeUser(async (id, done) => {
     done(err);
   }
 });
+
+// Serve static files from the 'styles' folder
+app.use('/styles', express.static(path.join(__dirname, 'styles')));
 
 // Mount login route under "/login"
 app.use("/login", loginRoutes);
