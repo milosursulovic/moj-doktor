@@ -23,9 +23,17 @@
       overflow-x: hidden;
     }
 
+    .selected-day {
+      background-color: #ffd700 !important;
+      color: #000 !important;
+      font-weight: bold !important;
+      border: 2px solid #ffae00 !important;
+      border-radius: 4px;
+      box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.2);
+    }
+
     .sidebar {
       width: 250px;
-      /* fixed width */
       min-width: 250px;
       padding: 15px;
       background: #f2f2f2;
@@ -93,6 +101,7 @@
     .mini-calendar td {
       background-color: #fff;
       border: 1px solid #ddd;
+      cursor: pointer;
     }
 
     .mini-calendar .template-btn {
@@ -154,7 +163,6 @@
 
     label {
       font-weight: bold;
-      display: block;
       margin-bottom: 10px;
     }
   </style>
@@ -187,100 +195,56 @@
         <label for="calendar">Maj 2025</label>
         <div class="mini-calendar">
           <div class="calendar-header">
-            <button>&lt;</button>
-            <span>Maj 2025</span>
-            <button>&gt;</button>
+            <button id="prevMonth">‹</button>
+            <span id="monthLabel">Maj 2025</span>
+            <button id="nextMonth">›</button>
           </div>
-          <table>
+          <table id="mini-calendar-table">
             <thead>
               <tr>
-                <th>П</th>
-                <th>У</th>
-                <th>С</th>
-                <th>Ч</th>
-                <th>П</th>
-                <th>С</th>
-                <th>Н</th>
+                <th>P</th>
+                <th>U</th>
+                <th>S</th>
+                <th>Č</th>
+                <th>P</th>
+                <th>S</th>
+                <th>N</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>4</td>
-              </tr>
-              <tr>
-                <td>5</td>
-                <td>6</td>
-                <td>7</td>
-                <td>8</td>
-                <td>9</td>
-                <td>10</td>
-                <td>11</td>
-              </tr>
-              <tr>
-                <td>12</td>
-                <td>13</td>
-                <td>14</td>
-                <td>15</td>
-                <td>16</td>
-                <td>17</td>
-                <td>18</td>
-              </tr>
-              <tr>
-                <td>19</td>
-                <td>20</td>
-                <td>21</td>
-                <td>22</td>
-                <td>23</td>
-                <td>24</td>
-                <td>25</td>
-              </tr>
-              <tr>
-                <td>26</td>
-                <td>27</td>
-                <td>28</td>
-                <td>29</td>
-                <td>30</td>
-                <td>31</td>
-                <td></td>
-              </tr>
+            <tbody id="calendarBody">
+              <!-- Calendar days will be injected here -->
             </tbody>
           </table>
-          <button class="template-btn">Нови шаблон</button>
+          <button class="template-btn">Novi šablon</button>
         </div>
       </div>
 
       <div class="calendar">
         <div class="controls">
-          <strong>5 Maj - 11 Maj</strong>
-          <button>Obriši vreme za prije</button>
-          <select>
-            <option>Vreme trajanja 15</option>
+          <strong id="week-range-label">5 Maj - 11 Maj</strong>
+          <button>Obriši vreme za prijem</button>
+          <label>Vreme trajanja</label><select>
+            <option>15</option>
           </select>
-          <select>
-            <option>Interval 15</option>
+          <label>Interval</label><select>
+            <option>15</option>
           </select>
-          <select>
+          <label>Vreme na kalendaru</label><select>
             <option>Radno vreme</option>
           </select>
-          <button>Celokupne aktivnosti</button>
+          <button>Celodnevne aktivnosti</button>
         </div>
 
         <table>
           <tr>
             <th>Vreme</th>
-            <th>Ponedeljak 5.05</th>
-            <th>Utorak 6.05</th>
-            <th>Sreda 7.05</th>
-            <th>Četvrtak 8.05</th>
-            <th class="highlight">Petak 9.05</th>
-            <th>Subota 10.05</th>
-            <th>Nedelja 11.05</th>
+            <th id="day1"></th>
+            <th id="day2"></th>
+            <th id="day3"></th>
+            <th id="day4"></th>
+            <th id="day5"></th>
+            <th id="day6"></th>
+            <th id="day7"></th>
           </tr>
 
           <script>
@@ -288,7 +252,6 @@
             const startMinute = 30;
             const endHour = 13;
             const endMinute = 45;
-
             const pad = n => n.toString().padStart(2, '0');
             let html = '';
 
@@ -296,22 +259,121 @@
               for (let min = 0; min < 60; min += 15) {
                 if (hour === startHour && min < startMinute) continue;
                 if (hour === endHour && min > endMinute) break;
-
-                const time = `${pad(hour)}:${pad(min)}`;
-                html += `
-                                <tr>
-                                    <td class="time-column">${time}</td>
-                                    <td></td><td></td><td></td><td></td><td class="highlight"></td><td></td><td></td>
-                                </tr>`;
+                html += `<tr><td class="time-column">${pad(hour)}:${pad(min)}</td>`;
+                for (let i = 0; i < 7; i++) html += `<td></td>`;
+                html += `</tr>`;
               }
             }
-
             document.write(html);
           </script>
         </table>
+
+        <script>
+          const dayNames = ['Ponedeljak', 'Utorak', 'Sreda', 'Četvrtak', 'Petak', 'Subota', 'Nedelja'];
+          let selectedDate = new Date();
+          let currentMonth = selectedDate.getMonth();
+          let currentYear = selectedDate.getFullYear();
+
+          const updateMainCalendar = (date) => {
+            const dayOfWeek = (date.getDay() + 6) % 7;
+            const monday = new Date(date);
+            monday.setDate(date.getDate() - dayOfWeek);
+            let startLabel = '',
+              endLabel = '';
+            for (let i = 0; i < 7; i++) {
+              const d = new Date(monday);
+              d.setDate(monday.getDate() + i);
+              const dayNum = d.getDate().toString().padStart(2, '0');
+              const monthNum = (d.getMonth() + 1).toString().padStart(2, '0');
+              const header = document.getElementById(`day${i + 1}`);
+              header.textContent = `${dayNames[i]} ${dayNum}.${monthNum}`;
+              header.classList.toggle('highlight', d.toDateString() === date.toDateString());
+
+              const table = header.closest('table');
+              const rows = table.querySelectorAll('tr');
+              rows.forEach(row => {
+                const cell = row.querySelector(`td:nth-child(${i + 2})`);
+                if (cell) cell.classList.toggle('highlight', d.toDateString() === date.toDateString());
+              });
+              if (i === 0) startLabel = `${dayNum} ${d.toLocaleString('default', { month: 'short' })}`;
+              if (i === 6) endLabel = `${dayNum} ${d.toLocaleString('default', { month: 'short' })}`;
+            }
+            document.getElementById('week-range-label').textContent = `${startLabel} - ${endLabel}`;
+
+            // Mark the selected day in the mini calendar
+            const miniCalendarCells = document.querySelectorAll(".mini-calendar td");
+            miniCalendarCells.forEach(cell => {
+              if (cell.textContent.trim() !== '') {
+                const dayInMiniCalendar = parseInt(cell.textContent);
+                const cellDate = new Date(currentYear, currentMonth, dayInMiniCalendar);
+                if (cellDate.toDateString() === date.toDateString()) {
+                  cell.classList.add('selected-day');
+                } else {
+                  cell.classList.remove('selected-day');
+                }
+              }
+            });
+          };
+
+          const renderMiniCalendar = (month, year) => {
+            const firstDayOfMonth = new Date(year, month, 1);
+            const lastDayOfMonth = new Date(year, month + 1, 0);
+            const firstDayOfWeek = (firstDayOfMonth.getDay() + 6) % 7;
+            const numDaysInMonth = lastDayOfMonth.getDate();
+
+            // Update month label
+            const monthNames = ['Januar', 'Februar', 'Mart', 'April', 'Maj', 'Jun', 'Jul', 'Avgust', 'Septembar', 'Oktobar', 'Novembar', 'Decembar'];
+            document.getElementById('monthLabel').textContent = `${monthNames[month]} ${year}`;
+
+            let calendarHTML = '';
+            for (let i = 0; i < 6; i++) {
+              calendarHTML += '<tr>';
+              for (let j = 0; j < 7; j++) {
+                const dayNumber = i * 7 + j - firstDayOfWeek + 1;
+                if (dayNumber > 0 && dayNumber <= numDaysInMonth) {
+                  calendarHTML += `<td class="calendar-day">${dayNumber}</td>`;
+                } else {
+                  calendarHTML += '<td></td>';
+                }
+              }
+              calendarHTML += '</tr>';
+            }
+            document.getElementById('calendarBody').innerHTML = calendarHTML;
+
+            // Add click event for selecting a day
+            const calendarDays = document.querySelectorAll('.calendar-day');
+            calendarDays.forEach(day => {
+              day.addEventListener('click', () => {
+                const clickedDate = new Date(year, month, day.textContent);
+                selectedDate = clickedDate;
+                updateMainCalendar(selectedDate);
+                renderMiniCalendar(currentMonth, currentYear);
+              });
+            });
+          };
+
+          document.getElementById('prevMonth').addEventListener('click', () => {
+            currentMonth = (currentMonth === 0) ? 11 : currentMonth - 1;
+            currentYear = (currentMonth === 11) ? currentYear - 1 : currentYear;
+            renderMiniCalendar(currentMonth, currentYear);
+            updateMainCalendar(new Date(currentYear, currentMonth, selectedDate.getDate()));
+          });
+
+          document.getElementById('nextMonth').addEventListener('click', () => {
+            currentMonth = (currentMonth === 11) ? 0 : currentMonth + 1;
+            currentYear = (currentMonth === 0) ? currentYear + 1 : currentYear;
+            renderMiniCalendar(currentMonth, currentYear);
+            updateMainCalendar(new Date(currentYear, currentMonth, selectedDate.getDate()));
+          });
+
+          // Initialize calendar with the current date
+          renderMiniCalendar(currentMonth, currentYear);
+          updateMainCalendar(selectedDate);
+        </script>
       </div>
     </div>
   </div>
+
 </body>
 
 </html>
